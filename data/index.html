@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sunrise Clock</title>
+<style>
+:root{--bg:#15110e;--card:#201a16;--fg:#f4ebe3;--mut:#a9988b;--acc:#ff9a4d;--on:#1b120b;--bd:#3a302a;--bad:#ff7a6b}
+@media (prefers-color-scheme:light){:root{--bg:#faf6f2;--card:#fff;--fg:#2a211b;--mut:#6f6054;--acc:#c85a12;--on:#fff;--bd:#e3d8ce;--bad:#b3261e}}
+*{box-sizing:border-box}[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}
+main{max-width:640px;margin:0 auto;padding:16px}
+h1{font-size:1.35rem;margin:4px 0 14px}h2{font-size:1.05rem;margin:0 0 8px}
+section{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px;margin-bottom:14px}
+label{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:8px 0}
+input,select,button{font:inherit;color:inherit;background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:6px 10px;min-height:36px}
+input[type=range]{flex:1;min-width:0;padding:0;accent-color:var(--acc)}
+input[type=checkbox]{min-height:auto;width:20px;height:20px;accent-color:var(--acc)}
+button{cursor:pointer}button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.pri{background:var(--acc);border-color:var(--acc);color:var(--on);font-weight:600}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.alarm{border-top:1px solid var(--bd);padding:10px 0}.alarm:first-child{border-top:0}
+.days{flex-wrap:nowrap;gap:6px}.days button{flex:1;min-width:0;max-width:3rem;padding:4px 0}.days button[aria-pressed=true]{background:var(--acc);border-color:var(--acc);color:var(--on)}
+.mut{color:var(--mut);font-size:.9rem}.warn{color:var(--bad)}.val{min-width:3.2em;text-align:right}
+#clock{font-size:1.8rem;font-variant-numeric:tabular-nums}
+.big{font-size:1.5rem;font-variant-numeric:tabular-nums}
+.hyp{display:block;width:100%;height:40px;background:var(--bg);border-radius:6px;margin:8px 0 2px}
+.night{display:grid;grid-template-columns:6.5em 1fr 6.5em;gap:8px;align-items:center;margin:6px 0;font-size:.9rem}
+.night .hyp{height:12px;margin:0}.night span:last-child{text-align:right}
+</style>
+</head>
+<body>
+<main>
+<h1>Sunrise Clock</h1>
+
+<section aria-live="polite">
+  <div id="clock">--:--</div>
+  <div id="status" class="mut"></div>
+  <div id="warn" class="warn"></div>
+  <div id="ring" class="row" hidden>
+    <button class="pri" data-act="snooze">Snooze 9 min</button><button data-act="dismiss">Dismiss</button>
+  </div>
+</section>
+
+<section>
+  <h2>Alarms</h2>
+  <div id="alarms"></div>
+  <div class="row"><button id="add">Add alarm</button><button class="pri" id="saveAlarms">Save alarms</button></div>
+  <p class="mut">No days selected = one-time alarm. The light starts rising 30 min before.</p>
+</section>
+
+<section>
+  <h2>Light</h2>
+  <label>Night light <input type="checkbox" id="lon"></label>
+  <label>Brightness <input type="range" id="lpct" min="1" max="100"><span class="val" id="lpctV"></span></label>
+  <label>Colour <input type="range" id="lk" min="1700" max="6500" step="100"><span class="val" id="lkV"></span></label>
+  <label>Auto-dim (BH1750) <input type="checkbox" id="autoDim"></label>
+  <label>Sunrise max <input type="range" id="sunriseMax" min="1" max="100"><span class="val" id="sunriseMaxV"></span></label>
+  <label>Clock brightness <input type="range" id="clockLevel" min="0" max="16"><span class="val" id="clockLevelV"></span></label>
+  <label>24-hour clock <input type="checkbox" id="clock24"></label>
+  <p class="mut" id="noClock" hidden>No dot-matrix clock detected.</p>
+</section>
+
+<section>
+  <h2>Sleep</h2>
+  <div id="sleepLive" class="mut"></div>
+  <div id="lastNight"></div>
+  <div id="week"></div>
+  <label>Sleep tracking <input type="checkbox" id="sleepTracking"></label>
+  <label>Bed distance <input type="range" id="sleepRangeCm" min="30" max="600" step="10"><span class="val" id="sleepRangeCmV"></span></label>
+  <button id="clearSleep">Clear sleep history</button>
+  <p class="mut">The radar measures presence and movement: time in bed, asleep or awake, and wake-ups. It does not measure sleep stages and is not a medical device. Nights are stored only on the clock.</p>
+</section>
+
+<section>
+  <h2>Sleep sounds</h2>
+  <label>Sound <select id="snd"></select></label>
+  <label>Volume <input type="range" id="soundVolume" min="0" max="100"><span class="val" id="soundVolumeV"></span></label>
+  <label>Sleep timer <select id="timer"><option value="0">Off</option><option>15</option><option>30</option><option>45</option><option>60</option><option>90</option><option>120</option></select></label>
+  <div class="row"><button class="pri" id="play">Play</button><button id="stop">Stop</button><span id="sstat" class="mut"></span></div>
+  <label>Alarm chime volume <input type="range" id="alarmVolume" min="0" max="100"><span class="val" id="alarmVolumeV"></span></label>
+</section>
+
+<section>
+  <h2>Time</h2>
+  <label>Time zone <select id="tzSel"></select></label>
+  <label>POSIX TZ <input id="tz" spellcheck="false"></label>
+  <div class="row"><button id="saveTz">Save time zone</button><button id="syncTime">Set clock from this device</button></div>
+</section>
+
+<section>
+  <h2>Wi-Fi and security</h2>
+  <label>Network <input id="ssid" autocomplete="off"></label>
+  <label>Password <input id="pass" type="password" autocomplete="new-password" placeholder="unchanged"></label>
+  <label>Admin password <input id="admin" type="password" autocomplete="new-password" placeholder="unchanged"></label>
+  <button id="saveWifi">Save</button>
+  <p class="mut">Changing the network reboots the clock. With an admin password set, every change and firmware upload asks for user <b>admin</b>.</p>
+</section>
+
+<section>
+  <h2>Firmware update</h2>
+  <div class="row">
+    <input type="file" id="fw" accept=".bin" aria-label="Firmware file">
+    <select id="fwType" aria-label="Image type"><option value="">Firmware (firmware.bin)</option><option value="?fs=1">Web UI (littlefs.bin)</option></select>
+    <button id="ota">Upload</button>
+  </div>
+  <progress id="prog" max="100" value="0" hidden></progress>
+</section>
+<p id="msg" class="mut" role="status"></p>
+</main>
+
+<script>
+const $ = id => document.getElementById(id);
+const DAYS = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+const TZ = [['UTC','UTC0'],['US Eastern','EST5EDT,M3.2.0,M11.1.0'],['US Central','CST6CDT,M3.2.0,M11.1.0'],
+  ['US Mountain','MST7MDT,M3.2.0,M11.1.0'],['US Arizona','MST7'],['US Pacific','PST8PDT,M3.2.0,M11.1.0'],
+  ['UK / Ireland','GMT0BST,M3.5.0/1,M10.5.0'],['Central Europe','CET-1CEST,M3.5.0,M10.5.0/3'],
+  ['Eastern Europe','EET-2EEST,M3.5.0/3,M10.5.0/4'],['India','IST-5:30'],['China / Singapore','CST-8'],
+  ['Japan','JST-9'],['Australia East','AEST-10AEDT,M10.1.0,M4.1.0/3'],['New Zealand','NZST-12NZDT,M9.5.0,M4.1.0/3']];
+let alarms = [], loaded = false;
+
+const pad = n => String(n).padStart(2, '0');
+const msg = t => { $('msg').textContent = t; };
+const hm = m => `${Math.floor(m / 60)} h ${pad(m % 60)} min`;
+const tod = t => new Date(t * 1000).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+const day = t => new Date(t * 1000).toLocaleDateString([], {weekday: 'short', month: 'short', day: 'numeric'});
+function hypno(stages) {  // asleep = full bar, awake = half bar, out of bed = gap
+  const w = 100 / Math.max(stages.length, 1), runs = stages.match(/(.)\1*/g) || [];
+  let x = 0;
+  return `<svg class="hyp" viewBox="0 0 100 10" preserveAspectRatio="none" role="img" aria-label="Asleep and awake through the night">` +
+    runs.map(r => {  // one rect per run, so no seams between buckets
+      const c = r[0], rect = c === '0' ? '' : `<rect x="${x * w}" y="${c === '2' ? 0 : 5}" width="${r.length * w}" height="${c === '2' ? 10 : 5}" fill="var(${c === '2' ? '--acc' : '--mut'})"/>`;
+      x += r.length;
+      return rect;
+    }).join('') + '</svg>';
+}
+async function loadSleep() {
+  let d;
+  try { d = await (await fetch('/api/sleep')).json(); } catch (e) { return; }
+  const n = d.nights;
+  if (!n.length) { $('lastNight').innerHTML = '<p class="mut">No nights recorded yet.</p>'; $('week').replaceChildren(); return; }
+  const l = n[0], eff = Math.round(100 * l.asleep / Math.max(l.inBed, 1));
+  $('lastNight').innerHTML = `<div class="big">${hm(l.asleep)} asleep</div>
+    <div class="mut">${day(l.start)}, ${tod(l.start)} to ${tod(l.end)} · ${eff} % of time in bed · fell asleep in ${l.latency} min · ${l.wakeups} wake-up${l.wakeups === 1 ? '' : 's'}</div>
+    ${hypno(l.stages)}<div class="row mut" style="justify-content:space-between"><span>${tod(l.start)}</span><span>${tod(l.end)}</span></div>`;
+  const avg = Math.round(n.reduce((a, x) => a + x.asleep, 0) / n.length);
+  $('week').innerHTML = `<p class="mut">${n.length}-night average: ${hm(avg)} asleep</p>` +
+    n.map(x => `<div class="night"><span>${day(x.start)}</span>${hypno(x.stages)}<span>${hm(x.asleep)}</span></div>`).join('');
+}
+const dur = s => s >= 86400 ? `${Math.floor(s/86400)} d ${Math.floor(s%86400/3600)} h` : `${Math.floor(s/3600)} h ${Math.floor(s%3600/60)} min`;
+
+async function post(url, body) {
+  try {
+    const r = await fetch(url, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body)});
+    msg(r.ok ? 'Saved' : r.status === 401 ? 'Wrong admin password' : 'Rejected by the clock (check the values)');
+    if (r.ok) refresh();
+    return r.ok;
+  } catch (e) { msg('Clock unreachable'); return false; }
+}
+
+function renderAlarms() {
+  const box = $('alarms');
+  box.replaceChildren();
+  if (!alarms.length) box.innerHTML = '<p class="mut">No alarms yet.</p>';
+  alarms.forEach((a, i) => {
+    const d = document.createElement('div');
+    d.className = 'alarm';
+    d.innerHTML = `<div class="row"><input type="time" required aria-label="Alarm time" value="${pad(a.hour)}:${pad(a.minute)}">
+      <label style="margin:0">On <input type="checkbox" ${a.enabled ? 'checked' : ''}></label>
+      <button aria-label="Delete alarm">Delete</button></div>
+      <div class="row days">${DAYS.map((n, b) => `<button aria-pressed="${!!(a.days >> b & 1)}">${n}</button>`).join('')}</div>`;
+    const [time, en, del] = d.querySelectorAll('.row:first-child input, .row:first-child button');
+    time.onchange = () => { const [h, m] = time.value.split(':').map(Number); if (!isNaN(h)) { a.hour = h; a.minute = m; } };
+    en.onchange = () => { a.enabled = en.checked; };
+    del.onclick = () => { alarms.splice(i, 1); renderAlarms(); };
+    d.querySelectorAll('.days button').forEach((btn, b) => btn.onclick = () => {
+      a.days ^= 1 << b; btn.setAttribute('aria-pressed', !!(a.days >> b & 1));
+    });
+    box.append(d);
+  });
+}
+
+function setRange(id, v) {
+  if (document.activeElement !== $(id)) $(id).value = v;
+  $(id + 'V').textContent = id === 'lk' ? v + ' K' : id === 'sleepRangeCm' ? v + ' cm' : id === 'clockLevel' ? (+v ? v + '/16' : 'off') : v + ' %';
+}
+
+async function refresh() {
+  let s;
+  try { s = await (await fetch('/api/state')).json(); } catch (e) { $('status').textContent = 'Clock unreachable'; return; }
+  const st = s.settings;
+  $('clock').textContent = s.timeValid ? s.local : 'Time not set';
+  const n = s.next.index >= 0 ? s.alarms[s.next.index] : null;
+  $('status').textContent = [n ? `Next alarm ${pad(n.hour)}:${pad(n.minute)} in ${dur(s.next.in)}` : 'No alarm set',
+    s.phase !== 'idle' ? `Alarm: ${s.phase}` : '', s.wifi.connected ? `Wi-Fi ${s.wifi.ssid} (${s.wifi.ip})` : s.wifi.ap ? 'Setup Wi-Fi active' : 'Wi-Fi offline',
+    'fw ' + s.fw].filter(Boolean).join(' · ');
+  $('warn').textContent = [!s.rtc && 'RTC not responding', !s.timeValid && 'Set the clock below', !s.audio.sd && 'No SD card: sleep sounds unavailable',
+    !s.auth && 'No admin password set'].filter(Boolean).join(' · ');
+  $('ring').hidden = s.phase !== 'ringing' && s.phase !== 'snoozed' && s.phase !== 'sunrise';
+  $('lon').checked = s.light.on;
+  setRange('lpct', st.nightPct); setRange('lk', st.nightKelvin); setRange('sunriseMax', st.sunriseMax);
+  setRange('soundVolume', st.soundVolume); setRange('alarmVolume', st.alarmVolume); setRange('clockLevel', st.clockLevel);
+  $('clock24').checked = st.clock24; $('noClock').hidden = !!s.light.clock;
+  const z = s.sleep;
+  $('sleepLive').textContent = !z.sensor ? 'No radar detected (HLK-LD2410C on GPIO4/13).' :
+    `Radar: ${z.present ? 'someone in bed' : 'bed empty'} · motion ${z.motion} · ${z.distance} cm` +
+    (z.tracking ? ` · night started ${tod(z.since)}, ${z.asleep ? 'asleep' : 'awake'}, ${hm(z.asleepMin)} asleep so far` : '');
+  $('sleepTracking').checked = st.sleepTracking; setRange('sleepRangeCm', st.sleepRangeCm);
+  $('autoDim').checked = st.autoDim; $('autoDim').disabled = s.light.lux === undefined;
+  $('sstat').textContent = s.audio.source === 'sound' ? `Playing ${s.audio.current}${s.audio.timer ? ', stops in ' + dur(s.audio.timer) : ''}` : s.audio.source === 'chime' ? 'Chime' : '';
+  if (!loaded) {
+    loaded = true;
+    alarms = s.alarms; renderAlarms();
+    $('snd').replaceChildren(...s.audio.sounds.map(f => new Option(f.replace(/\.wav$/i, ''), f)));
+    $('tz').value = st.tz; $('tzSel').value = TZ.some(t => t[1] === st.tz) ? st.tz : '';
+    $('ssid').value = st.ssid;
+  }
+}
+
+$('tzSel').replaceChildren(new Option('Custom', ''), ...TZ.map(([n, v]) => new Option(n, v)));
+$('tzSel').onchange = e => { if (e.target.value) $('tz').value = e.target.value; };
+$('add').onclick = () => { alarms.push({hour: 7, minute: 0, days: 62, enabled: true}); renderAlarms(); };
+$('saveAlarms').onclick = () => post('/api/alarms', alarms);
+document.querySelectorAll('[data-act]').forEach(b => b.onclick = () => post('/api/alarm', {action: b.dataset.act}));
+const light = () => post('/api/light', {on: $('lon').checked, nightPct: +$('lpct').value, nightKelvin: +$('lk').value});
+$('lon').onchange = light; $('lpct').onchange = light; $('lk').onchange = light;
+['lpct', 'lk', 'sunriseMax', 'soundVolume', 'alarmVolume', 'clockLevel', 'sleepRangeCm'].forEach(id => $(id).addEventListener('input', () => setRange(id, $(id).value)));
+$('autoDim').onchange = e => post('/api/settings', {autoDim: e.target.checked});
+$('sunriseMax').onchange = e => post('/api/settings', {sunriseMax: +e.target.value});
+$('alarmVolume').onchange = e => post('/api/settings', {alarmVolume: +e.target.value});
+$('clockLevel').onchange = e => post('/api/settings', {clockLevel: +e.target.value});
+$('clock24').onchange = e => post('/api/settings', {clock24: e.target.checked});
+$('sleepTracking').onchange = e => post('/api/settings', {sleepTracking: e.target.checked});
+$('sleepRangeCm').onchange = e => post('/api/settings', {sleepRangeCm: +e.target.value});
+$('clearSleep').onclick = () => confirm('Delete all recorded nights?') && post('/api/sleep', {clear: true}).then(loadSleep);
+$('soundVolume').onchange = e => post('/api/sound', {soundVolume: +e.target.value});
+$('play').onclick = () => $('snd').value ? post('/api/sound', {play: $('snd').value, timer: +$('timer').value, soundVolume: +$('soundVolume').value}) : msg('No sounds on the SD card');
+$('stop').onclick = () => post('/api/sound', {stop: true});
+$('saveTz').onclick = () => post('/api/settings', {tz: $('tz').value.trim()});
+$('syncTime').onclick = () => post('/api/time', {epoch: Math.floor(Date.now() / 1000)});
+$('saveWifi').onclick = () => {
+  const b = {}, ssid = $('ssid').value.trim();
+  if (ssid) b.ssid = ssid;
+  if ($('pass').value || ssid) b.pass = $('pass').value;  // empty password = open network
+  if ($('admin').value) b.adminPass = $('admin').value;
+  if (b.pass && b.pass.length < 8) return msg('Wi-Fi passwords are 8-64 characters (empty for open networks)');
+  post('/api/settings', b).then(ok => ok && b.ssid && msg('Saved. Rebooting onto the new network...'));
+};
+$('ota').onclick = () => {
+  const f = $('fw').files[0];
+  if (!f) return msg('Choose a .bin file first');
+  const x = new XMLHttpRequest(), fd = new FormData();
+  fd.append('file', f, f.name);
+  x.upload.onprogress = e => { $('prog').hidden = false; $('prog').value = e.loaded / e.total * 100; };
+  x.onload = () => msg(x.status === 200 ? 'Update OK, rebooting...' : 'Update failed: ' + x.responseText);
+  x.onerror = () => msg('Upload failed');
+  x.open('POST', '/update' + $('fwType').value);
+  x.send(fd);
+};
+refresh();
+setInterval(refresh, 3000);
+loadSleep();
+setInterval(loadSleep, 60000);
+</script>
+</body>
+</html>
