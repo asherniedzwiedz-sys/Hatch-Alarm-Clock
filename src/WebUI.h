@@ -18,6 +18,8 @@ class WebUI {
   void loop();  // call every loop
 
  private:
+  bool sameOrigin(AsyncWebServerRequest* r);
+  bool passSet();
   bool authOk(AsyncWebServerRequest* r);  // checks only
   bool authed(AsyncWebServerRequest* r);  // checks, and answers 401 when it fails
   void post(const char* path, std::function<bool(JsonVariant&)> fn);
@@ -33,4 +35,5 @@ class WebUI {
   const float* lux_ = nullptr;
   uint32_t lastSta_ = 0, restartAt_ = 0;
   bool apOn_ = false, clock_ = false;
+  AsyncWebServerRequest* otaReq_ = nullptr;  // the upload that passed auth (compared, never dereferenced)
 };

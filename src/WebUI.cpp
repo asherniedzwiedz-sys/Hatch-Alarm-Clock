@@ -32,9 +32,12 @@ void WebUI::begin(AlarmScheduler& sched, LightEngine& light, AudioEngine& audio,
   if (MDNS.begin(HOSTNAME)) MDNS.addService("http", "tcp", 80);
   if (!LittleFS.begin(false)) log_e("LittleFS missing: run `pio run -t uploadfs`");
 
-  server_.on("/api/state", HTTP_GET, [this](AsyncWebServerRequest* r) { sendState(r); });
+  server_.on("/api/state", HTTP_GET, [this](AsyncWebServerRequest* r) {
+    if (authed(r)) sendState(r);  // occupancy is private once an admin password is set
+  });
 
   server_.on("/api/sleep", HTTP_GET, [this](AsyncWebServerRequest* r) {
+    if (!authed(r)) return;
     JsonDocument doc;
     {
       std::lock_guard<std::mutex> g(*lock_);
@@ -106,6 +109,10 @@ void WebUI::begin(AlarmScheduler& sched, LightEngine& light, AudioEngine& audio,
       "/update", HTTP_POST,
       [this](AsyncWebServerRequest* r) {
         if (!authed(r)) return;
+        if (!passSet()) {
+          r->send(403, "text/plain", "Set an admin password first");
+          return;
+        }
         const bool ok = Update.isFinished() && !Update.hasError();
         r->send(ok ? 200 : 500, "text/plain", ok ? "OK, rebooting" : Update.errorString());
         std::lock_guard<std::mutex> g(*lock_);
@@ -113,15 +120,19 @@ void WebUI::begin(AlarmScheduler& sched, LightEngine& light, AudioEngine& audio,
       },
       [this](AsyncWebServerRequest* r, const String&, size_t index, uint8_t* data, size_t len, bool final) {
         if (!index) {
+          if (!passSet() || !authOk(r)) return;  // checked first: a stranger can't abort a running update
           if (Update.isRunning()) Update.abort();
-          if (!authOk(r)) return;  // the completion handler answers 401
           const bool fs = r->hasParam("fs");
           if (fs) LittleFS.end();
           Update.begin(UPDATE_SIZE_UNKNOWN, fs ? U_SPIFFS : U_FLASH);  // LittleFS uses the "spiffs" partition
+          otaReq_ = r;
         }
-        if (!Update.isRunning()) return;
+        if (r != otaReq_ || !Update.isRunning()) return;  // only the request that passed auth may write
         Update.write(data, len);
-        if (final) Update.end(true);  // verifies the image; the old firmware stays on failure
+        if (final) {
+          Update.end(true);  // verifies the image; the old firmware stays on failure
+          otaReq_ = nullptr;
+        }
       });
 
   server_.serveStatic("/", LittleFS, "/").setDefaultFile("index.html");
@@ -148,18 +159,36 @@ void WebUI::startAp() {
   apOn_ = true;
 }
 
+// Host must name this clock (blocks DNS rebinding) and a browser's Origin must match it (blocks CSRF).
+bool WebUI::sameOrigin(AsyncWebServerRequest* r) {
+  String host = r->host();
+  host.toLowerCase();
+  const int colon = host.indexOf(':');
+  const String name = colon < 0 ? host : host.substring(0, colon);
+  if (name != WiFi.localIP().toString() && name != WiFi.softAPIP().toString() && name != HOSTNAME &&
+      name != String(HOSTNAME) + ".local")
+    return false;
+  return !r->hasHeader("Origin") || r->header("Origin").equalsIgnoreCase(String("http://") + host);
+}
+
+bool WebUI::passSet() {
+  std::lock_guard<std::mutex> g(*lock_);
+  return sched_->settings.adminPass[0] != 0;
+}
+
 bool WebUI::authOk(AsyncWebServerRequest* r) {
   char pass[sizeof(Settings::adminPass)];
   {
     std::lock_guard<std::mutex> g(*lock_);
     memcpy(pass, sched_->settings.adminPass, sizeof pass);
   }
-  return !pass[0] || r->authenticate("admin", pass);
+  return sameOrigin(r) && (!pass[0] || r->authenticate("admin", pass));
 }
 
 bool WebUI::authed(AsyncWebServerRequest* r) {
   if (authOk(r)) return true;
-  r->requestAuthentication();
+  if (sameOrigin(r)) r->requestAuthentication();
+  else r->send(403, "text/plain", "Forbidden");
   return false;
 }
 

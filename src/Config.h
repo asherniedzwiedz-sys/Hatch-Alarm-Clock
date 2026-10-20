@@ -43,6 +43,6 @@ constexpr int SLEEP_NIGHTS = 7;               // history kept in NVS
 
 // ---- Network ----
 constexpr const char* AP_SSID = "SunriseClock-Setup";
-constexpr const char* AP_PASS = "sunrise-setup";  // WPA2 needs >= 8 characters
+constexpr const char* AP_PASS = "sunrise-setup";  // public default: change before flashing (WPA2, >= 8 chars)
 constexpr const char* HOSTNAME = "sunrise";       // http://sunrise.local
 constexpr const char* FW_VERSION = "1.0.0";

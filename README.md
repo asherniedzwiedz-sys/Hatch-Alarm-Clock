@@ -83,6 +83,8 @@ pio test -e native
    - Save. The clock reboots onto your network as `http://sunrise.local`.
 3. Once online, NTP keeps the DS3231 accurate. The RTC is the time authority: after a power cut, or with no Wi-Fi at all, the time comes from the RTC and alarms still fire.
 
+Security: change `AP_PASS` in `src/Config.h` before flashing, because the default is public. Set an admin password during first setup. Firmware upload stays disabled until one exists, and once set it also protects every change plus the sleep and occupancy data. The API only answers requests addressed to the clock itself (its IP, `sunrise` or `sunrise.local`), and rejects other websites' requests. That blocks drive-by attacks from a page open in your browser.
+
 Five red blinks at boot mean the clock has no valid time (DS3231 missing, or its coin cell was dead). Set the time from the web UI.
 
 ## Behaviour
