@@ -126,6 +126,11 @@ void WebUI::begin(AlarmScheduler& sched, LightEngine& light, AudioEngine& audio,
           if (fs) LittleFS.end();
           Update.begin(UPDATE_SIZE_UNKNOWN, fs ? U_SPIFFS : U_FLASH);  // LittleFS uses the "spiffs" partition
           otaReq_ = r;
+          r->onDisconnect([this, r]() {  // r is freed after this: its address must never stay a credential
+            if (otaReq_ != r) return;
+            otaReq_ = nullptr;
+            if (Update.isRunning()) Update.abort();  // cut off mid-upload
+          });
         }
         if (r != otaReq_ || !Update.isRunning()) return;  // only the request that passed auth may write
         Update.write(data, len);

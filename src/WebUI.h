@@ -35,5 +35,5 @@ class WebUI {
   const float* lux_ = nullptr;
   uint32_t lastSta_ = 0, restartAt_ = 0;
   bool apOn_ = false, clock_ = false;
-  AsyncWebServerRequest* otaReq_ = nullptr;  // the upload that passed auth (compared, never dereferenced)
+  AsyncWebServerRequest* otaReq_ = nullptr;  // upload that passed auth; cleared when its connection closes
 };
