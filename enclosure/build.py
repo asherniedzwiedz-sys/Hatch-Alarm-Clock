@@ -12,7 +12,7 @@ from pathlib import Path
 
 import numpy as np
 
-HERE = Path(__file__).resolve().parent
+HERE = Path(os.path.relpath(Path(__file__).parent))  # relative: some sandboxed Pythons can't open long absolute paths
 SCAD = HERE / "sunrise_clock.scad"
 OUT = HERE / "stl"
 BED = 220.0

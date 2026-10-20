@@ -43,6 +43,13 @@ How the front works:
 
 ## Print
 
+**Bambu Studio (A1):** open [`sunrise_clock_A1.3mf`](sunrise_clock_A1.3mf). It has all 7 parts on 3 plates, with filament 1 = white PLA and filament 2 = black PLA, on standard 0.20 mm settings. The diffuser is set to 100 % infill, and the parts that take heat-set inserts get 4 walls.
+1. White: shell, diffuser, knob
+2. White: back cover, light box, speaker lid
+3. Black: frame
+
+If you change the model, rebuild it with `python make_3mf.py`, after `build.py`.
+
 | Part | Orientation (as exported) | Notes |
 |---|---|---|
 | `shell.stl` | back rim down | Putty/beige PLA or PETG, 0.2 mm, 4 perimeters. The 1.6 mm rim lip is a short overhang at the top. |
