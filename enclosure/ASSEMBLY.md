@@ -6,7 +6,7 @@ It's modelled on the Hatch sleep clocks:
 - a dot-matrix clock showing through the fabric below the glow;
 - a low dome knob on top.
 
-The outside is **184 W × 140 H × 72 D mm**. The front matches the Hatch Restore (7.24 in wide). It is 10 mm deeper than Hatch's 62 mm, because the rear-facing 57 mm speaker has to sit behind the 20 mm light gap.
+The outside is **184 W × 140 H × 72 D mm**. The front matches the Hatch Restore (7.24 in wide). It is 10 mm deeper than Hatch's 62 mm, because the rear-facing speaker has to sit behind the 20 mm light gap.
 
 `sunrise_clock.scad` is fully parametric: every size below is a variable at the top of the file.
 
@@ -65,8 +65,8 @@ Every part fits a 220 × 220 mm bed (largest footprint 184 × 140 mm).
 ## Hardware
 
 - **Fabric:** about 200 × 160 mm of thin, loosely woven linen or linen-look fabric. Hold it up to a bulb first: it should glow warm, not block the light.
-- **LED strip:** 40 × WS2812B at **96 LED/m**, cut into rows of 13, 12, 9 and 6 LEDs. The rows are generated from `led_count` / `led_per_m`, and the model refuses settings that don't fit. 60 LED/m fits only ~29 LEDs in this dome.
-- **Clock:** HT16K33 16×8 dot matrix (two 0.8" 8×8 matrices, 40.6 × 20.3 mm). Warm-white or amber looks closest to the original.
+- **LED strip:** 40 × WS2812B at **100 LED/m**, 10 mm wide, cut into rows of 13, 12, 9 and 6 LEDs. The rows are generated from `led_count` / `led_per_m`, and the model refuses settings that don't fit. 60 LED/m fits only ~29 LEDs in this dome.
+- **Clock:** Adafruit 0.8" 8x16 LED Matrix FeatherWing (HT16K33, 40.6 × 20.3 mm of LEDs). Its LEDs sit in a 3 mm locating rim on the frame, with the wider board behind. Warm white looks closest to the original.
 - **Sleep radar:** HLK-LD2410C (22 × 16 mm; the pocket is set by `radar_size`, so measure yours).
 - **Inserts:** 8 × M3 heat-set (Ø4.0 hole, 5 mm): 2 in the frame, 4 in the shell's back bosses, 2 in the light-box posts. Add 4 more for the devkit standoffs.
 - **Screws:**
@@ -77,7 +77,7 @@ Every part fits a 220 × 220 mm bed (largest footprint 184 × 140 mm).
 - **Controls:** EC11 encoder (nut on the M7 bushing) under the knob, and 2 × 12 mm panel-mount momentary buttons. All three holes are square to the curved top.
 - **Other:**
   - 4 rubber feet, Ø ≤ 11 mm
-  - 57 mm 4 Ω speaker
+  - 2" (51 mm) 4 Ω 3 W speaker (Gikfun EK1725); for another size, set `spk_d`
   - USB-C 5 V breakout, glued behind its slot
 
 ## Assembly
@@ -109,10 +109,10 @@ Latest run (frame / diffuser is the intended crush-rib press fit; every other pa
 
 ```
 shell          7466 tris   184.0 x  140.0 x   69.0 mm    100.1 cm3  manifold: yes  bed: fits
-frame          3072 tris   177.0 x  133.0 x   15.2 mm     26.1 cm3  manifold: yes  bed: fits
+frame          3072 tris   177.0 x  133.0 x   11.2 mm     24.2 cm3  manifold: yes  bed: fits
 diffuser        908 tris   170.0 x   93.0 x    2.0 mm     25.4 cm3  manifold: yes  bed: fits
-light_box      4432 tris   167.4 x   79.0 x   22.5 mm     34.7 cm3  manifold: yes  bed: fits
-back_cover     7462 tris   184.0 x  140.0 x   44.1 mm     89.3 cm3  manifold: yes  bed: fits
+light_box      4432 tris   167.4 x   79.0 x   22.5 mm     34.9 cm3  manifold: yes  bed: fits
+back_cover     7414 tris   184.0 x  140.0 x   44.1 mm     91.2 cm3  manifold: yes  bed: fits
 speaker_lid     288 tris    68.0 x   68.0 x    5.0 mm     21.1 cm3  manifold: yes  bed: fits
 knob           2480 tris    21.0 x   21.0 x    7.0 mm      1.9 cm3  manifold: yes  bed: fits
 overlap frame / shell: 0.000 mm3 (allowed 0.01)

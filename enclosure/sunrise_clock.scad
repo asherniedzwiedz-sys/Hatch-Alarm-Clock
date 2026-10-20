@@ -34,14 +34,14 @@ rib_d = 1.2;      // crush ribs reach rib_d/2 - clr = 0.1 mm into the diffuser: 
 led_gap = 20;  // diffuser back face -> LED face
 plate_t = 2.5; box_wall = 2;
 baffle_gap = 8;  // horizon baffle stops short of the diffuser so light spills into a soft edge
-led_count = 40; led_per_m = 96;  // 60/m fits only ~29 LEDs in this dome
+led_count = 40; led_per_m = 100;  // BTF-Lighting WS2812B 100 LED/m, 10 mm wide; 60/m fits only ~29 LEDs
 strip_w = 10; channel_d = 1; row_pitch = 15;
 box_posts = [[18, 59], [W - 18, 59]];
 
 /* [Clock display] */
 clock_size = [40.6, 20.3];  // HT16K33 16x8: two 0.8" 8x8 matrices
 clock_z = 24;               // centre height
-clock_sleeve = 12;
+clock_sleeve = 3;  // shallow rim: the Adafruit FeatherWing PCB is wider than its LEDs
 
 /* [Sleep radar] */
 radar_size = [22, 16];  // HLK-LD2410C board: measure yours; antenna side faces the fabric
@@ -49,7 +49,7 @@ radar_xz = [44, 24];    // lower left, clear of the clock, LEDs and speaker magn
 radar_sleeve = 8;
 
 /* [Speaker + electronics] */
-spk_d = 57; grille_d = 48;
+spk_d = 51; grille_d = 44;  // Gikfun 2" 4 ohm 3 W (EK1725)
 chamber_in = 64; chamber_wall = 2; chamber_depth = 36;
 pcb_holes = [22, 60]; pcb_center = [142.5, 48]; pcb_standoff = 5;  // devkit board beside the chamber
 usbc = [10, 4.2]; usbc_xz = [30, 12];
