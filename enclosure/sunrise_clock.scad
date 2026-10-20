@@ -142,11 +142,12 @@ module on_arc(dx, y) {  // radial placement on the curved top, dx from the centr
 }
 
 // ---- Shell: rim + walls, open at the back (prints back rim down) ----
-module frame_boss(p) {  // clamps the frame's lower corner; the hull ramps it into the corner walls
+module frame_boss(p) {  // corner column from the back rim (the print bed) to the frame: no overhang anywhere
+  len = shell_y1 - frame_y1 - 4;
   hull() {
-    along_y(p, frame_y1 + 4) cylinder(d = 9, h = 6);
-    translate([wall - embed, frame_y1 + 4, p[1] - 3]) cube([1 + embed, 14, 12]);
-    translate([p[0] - 3, frame_y1 + 4, wall - embed]) cube([12, 14, 1 + embed]);
+    along_y(p, frame_y1 + 4) cylinder(d = 9, h = len);
+    translate([wall - embed, frame_y1 + 4, p[1] - 3]) cube([1 + embed, len, 6]);
+    translate([p[0] - 3, frame_y1 + 4, wall - embed]) cube([6, len, 1 + embed]);
   }
 }
 
@@ -163,9 +164,10 @@ module shell() {
     }
     for (c = controls) on_arc(c[0], ctrl_y) translate([0, 0, W / 2 - wall - 2]) cylinder(d = c[1], h = wall + 4);
     translate([W / 2, lux_y, H - wall - 2]) cylinder(d = lux_d, h = wall + 4);
-    for (p = frame_screws) {
-      along_y(p, frame_y1 + 3) cylinder(d = screw_d, h = 30);
-      along_y(p, frame_y1 + 10) cylinder(d = head_d + 1, h = 30);  // screwdriver access from the back
+    for (p = frame_screws) {  // M3x10 countersunk; longer would push through the frame face
+      along_y(p, frame_y1 + 3) cylinder(d = screw_d, h = 7);
+      along_y(p, frame_y1 + 10 - (head_d - screw_d) / 2) cylinder(d1 = screw_d, d2 = head_d, h = (head_d - screw_d) / 2 + eps);
+      along_y(p, frame_y1 + 10) cylinder(d = head_d, h = shell_y1);  // driver channel from the open back
     }
     for (p = back_bosses) along_y(p, shell_y1 - insert_len - 1) cylinder(d = insert_d, h = insert_len + 2);
     for (x = [30, W - 30], y = [12, shell_y1 - 12]) translate([x, y, -eps]) cylinder(d = foot_d, h = foot_depth);

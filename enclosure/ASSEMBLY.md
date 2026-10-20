@@ -52,7 +52,7 @@ If you change the model, rebuild it with `python make_3mf.py`, after `build.py`.
 
 | Part | Orientation (as exported) | Notes |
 |---|---|---|
-| `shell.stl` | back rim down | Putty/beige PLA or PETG, 0.2 mm, 4 perimeters. The 1.6 mm rim lip is a short overhang at the top. |
+| `shell.stl` | back rim down | 0.2 mm, 4 perimeters, **no supports**. The corner screw columns rise straight from the bed. The only overhang is the 2.1 mm rim lip at the top, which prints fine as it is. |
 | `frame.stl` | face down | **Dark** filament, so the area below the horizon stays dark through the fabric |
 | `diffuser.stl` | flat | **White PETG**, 2 mm, 100 % infill. Or laser-cut 2 mm opal acrylic from the STL outline. |
 | `light_box.stl` | LED plate down | White, so it reflects forward |
@@ -70,7 +70,7 @@ Every part fits a 220 × 220 mm bed (largest footprint 184 × 140 mm).
 - **Sleep radar:** HLK-LD2410C (22 × 16 mm; the pocket is set by `radar_size`, so measure yours).
 - **Inserts:** 8 × M3 heat-set (Ø4.0 hole, 5 mm): 2 in the frame, 4 in the shell's back bosses, 2 in the light-box posts. Add 4 more for the devkit standoffs.
 - **Screws:**
-  - 2 × M3×10 pan head (frame)
+  - 2 × M3×10 countersunk (frame; no longer, or they push through the frame face)
   - 2 × M3×6 countersunk (light box)
   - 4 × M3×8 countersunk (back cover)
   - 4 × M3×6 for the devkit board (holes 22 × 60 mm)
@@ -85,7 +85,7 @@ Every part fits a 220 × 220 mm bed (largest footprint 184 × 140 mm).
 1. Press the heat-set inserts in: frame corners, shell back bosses, light-box posts, devkit standoffs.
 2. Cut the linen about 15 mm larger than the frame all round. Stretch it over the front, wrap it round the edge and glue it on the back. Cut the window corners so it lies flat, and keep the clock window and the two corner inserts clear.
 3. Press the diffuser into the frame's back. Push the clock module into its sleeve, and the radar into its pocket with the antenna side toward the fabric. Secure each with a dab of hot glue, keeping the glue off the radar's antenna.
-4. Drop the frame into the shell from behind, fabric first, and screw its two lower corners to the shell bosses.
+4. Drop the frame into the shell from behind, fabric first. Screw its two lower corners down through the corner columns: the screws go in from the open back, and a long 2 mm hex key reaches the countersunk seat.
 5. Fit the encoder, buttons and BH1750 (under the small top hole) into the shell.
 6. On the back cover:
    - glue in the speaker and press on the chamber lid;
@@ -105,10 +105,12 @@ The script exports each STL into `stl/` in print orientation, then checks:
 - the assembled parts don't intersect (OpenSCAD intersection of every pair that meets);
 - it re-renders `front.png` and `exploded.png`.
 
+`python enclosure/overhangs.py` lists every surface that faces the bed at more than 45° in print orientation, so you can see what needs support. Nothing here does.
+
 Latest run (frame / diffuser is the intended crush-rib press fit; every other pair is clear):
 
 ```
-shell          7466 tris   184.0 x  140.0 x   69.0 mm    100.1 cm3  manifold: yes  bed: fits
+shell          8002 tris   184.0 x  140.0 x   69.0 mm    112.6 cm3  manifold: yes  bed: fits
 frame          3072 tris   177.0 x  133.0 x   11.2 mm     24.2 cm3  manifold: yes  bed: fits
 diffuser        908 tris   170.0 x   93.0 x    2.0 mm     25.4 cm3  manifold: yes  bed: fits
 light_box      4432 tris   167.4 x   79.0 x   22.5 mm     34.9 cm3  manifold: yes  bed: fits
