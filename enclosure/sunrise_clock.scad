@@ -34,7 +34,7 @@ rib_d = 1.2;      // crush ribs reach rib_d/2 - clr = 0.1 mm into the diffuser: 
 led_gap = 20;  // diffuser back face -> LED face
 plate_t = 2.5; box_wall = 2;
 baffle_gap = 8;  // horizon baffle stops short of the diffuser so light spills into a soft edge
-led_count = 40; led_per_m = 100;  // BTF-Lighting WS2812B 100 LED/m, 10 mm wide; 60/m fits only ~29 LEDs
+led_count = 40; led_per_m = 96;  // channels sized for 96/m also fit 100/m strips (10 mm wide); 60/m fits only ~29
 strip_w = 10; channel_d = 1; row_pitch = 15;
 box_posts = [[18, 59], [W - 18, 59]];
 
