@@ -35,7 +35,7 @@ enclosure/            OpenSCAD model, STLs, build/check script, assembly guide
 | Speaker 2" 4 Ω 3 W | + / − | MAX98357A speaker terminals |
 | DS3231 + CR2032 | VCC / GND / SDA / SCL | 3V3 / GND / **GPIO21 / GPIO22** |
 | BH1750 (optional) | VCC / GND / SDA / SCL / ADDR | 3V3 / GND / GPIO21 / GPIO22 / GND (address 0x23) |
-| HT16K33 16×8 dot clock (Adafruit 0.8" FeatherWing, optional) | 3V / GND / SDA / SCL | 3V3 / GND / GPIO21 / GPIO22 (address 0x70) |
+| HT16K33-type 16×8 dot clock (OPEN-SMART 0.8" 16x8 I2C or Adafruit 0.8" FeatherWing, optional) | VCC (3V on Adafruit's) / GND / SDA / SCL | 3V3 / GND / GPIO21 / GPIO22 (address 0x70) |
 | HLK-LD2410C radar (sleep tracking) | VCC / GND / TX / RX / OUT | 5 V / GND / **GPIO4** / **GPIO13** / not connected (3.3 V UART, 256000 baud) |
 | microSD (VSPI, optional) | CS / SCK / MISO / MOSI | **GPIO5 / 18 / 19 / 23**; VCC 5 V if the module has a regulator, else 3V3. Only for your own WAVs |
 | Rotary encoder | A(CLK) / B(DT) / SW / + / GND | **GPIO34 / GPIO35 / GPIO33** / 3V3 / GND |
@@ -44,7 +44,11 @@ enclosure/            OpenSCAD model, STLs, build/check script, assembly guide
 
 Hardware notes that matter:
 - The LED strip is **96 or 100 LED/m, 10 mm wide** (WS2812B): that density fits 40 LEDs in the Hatch-size dome, and the channels fit either. A 60 LED/m strip fits only ~29; to use one, set `LED_COUNT` in `src/Config.h` and `led_count` / `led_per_m` in the enclosure model to match.
-- The dot clock is Adafruit's 0.8" 8x16 LED Matrix FeatherWing. It's made for 3.3 V Feather boards, so power it from **3V3** and wire SDA/SCL straight to GPIO21/22, no level shifter. A generic HT16K33 board that needs 5 V must go through a BSS138 I2C level shifter instead, because the ESP32 isn't 5 V tolerant. If the digits come out mirrored or upside down, flip `CLOCK_FLIP_X` / `CLOCK_FLIP_Y`.
+- The dot clock is a 0.8" 16x8 matrix with an HT16K33-type driver. Either of these works:
+  - the **OPEN-SMART 0.8" 16x8 I2C** board (red only; its VK16K33 chip is HT16K33-compatible);
+  - Adafruit's **0.8" 8x16 LED Matrix FeatherWing**.
+
+  Power either one from **3V3** and wire SDA/SCL straight to GPIO21/22, with no level shifter. A board powered from 5 V needs a BSS138 I2C level shifter instead, because the ESP32 isn't 5 V tolerant. If the clock stays dark, check which address the board answers at and set `CLOCK_ADDR` to match. If the digits come out mirrored or upside down, flip `CLOCK_FLIP_X` / `CLOCK_FLIP_Y`.
 - The radar sits behind the lower-left of the fabric, antenna side forward, with nothing metal in front of it. Put the clock at mattress height, facing the bed. Set **Bed distance** in the web UI to just past the far side of the bed, so someone walking around the room doesn't count. Then watch the live **motion** value while you lie still and while you turn over. If lying still reads above ~15, raise `SLEEP_MOVE_THRESHOLD` in `src/Config.h`.
 - **GPIO34/35 have no internal pull-ups.** Use 10 kΩ pull-ups to 3V3 on encoder A and B; KY-040 boards already have them. If one click moves two steps, set `ENC_STEPS_PER_DETENT = 2` in `src/Config.h`. If the direction is reversed, set `ENC_DIRECTION = -1`.
 - **DS3231 "ZS-042" boards charge the coin cell** through a diode and 200 Ω resistor meant for an LIR2032. With a CR2032, remove that resistor or diode, or the cell can swell.

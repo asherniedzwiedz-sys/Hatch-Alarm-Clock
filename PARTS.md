@@ -1,6 +1,35 @@
 # Parts list
 
-Also as a spreadsheet: [Sunrise_Clock_Parts.xlsx](Sunrise_Clock_Parts.xlsx). Pick Amazon or AliExpress per part, and the totals update.
+Also as a spreadsheet: [Sunrise_Clock_Parts.xlsx](Sunrise_Clock_Parts.xlsx). Its **Parts** tab compares Amazon and AliExpress per part; the **Buying** tab is the final list below.
+
+## Final buy list
+
+What's actually being ordered: one clock, every function. Each listing and option was opened and checked on 2026-10-21. Prices are the regular ones, not new-shopper deals. The AliExpress items are all free shipping.
+
+| Part | Listing | Option to pick | Price |
+|---|---|---|---|
+| WS2812B LED strip | [AliExpress (ANTVLED)](https://www.aliexpress.us/item/3256807796309465.html) | White PCB, 1m 96 IP30 | $4.75 |
+| 74AHCT125 level shifter | [AliExpress](https://www.aliexpress.us/item/3256807469514168.html) | 5PCS SN74AHCT125N | $2.41 |
+| MAX98357A amp | [AliExpress](https://www.aliexpress.us/item/3256807442706139.html) | 1PCS | $2.34 |
+| Speaker, Gikfun EK1725 2" 4 Ω 3 W | [Amazon](https://www.amazon.com/dp/B01CHYIU26) | 2 pcs | $11.49 |
+| DS3231 RTC (ZS-042, AT24C32) | [AliExpress](https://www.aliexpress.us/item/3256806957282138.html) | only one option | $3.14 |
+| KY-040 encoder + knob | [AliExpress](https://www.aliexpress.us/item/2255800145982269.html) | only one option | $1.48 |
+| 2 × 12 mm momentary buttons | [Amazon (Gebildet)](https://www.amazon.com/dp/B0B8Z14K3T) | SS-Momentary-5pcs (the Flat Head one) | $7.99 |
+| USB-C power input | [AliExpress](https://www.aliexpress.us/item/3256805787035895.html) | **army green** (the blue board with the 5.1 kΩ resistors), 1PCS | $2.86 |
+| HLK-LD2410C sleep radar | [AliExpress](https://www.aliexpress.us/item/3256806849046153.html) | 1pc | $5.91 |
+| Female-female jumper wires | [AliExpress](https://www.aliexpress.us/item/3256812379729214.html) | 20CM Female-Female, 1Set-40Pin | $3.32 |
+| Protoboards | [AliExpress](https://www.aliexpress.us/item/3256808585524708.html) | Red 3x7cm, 5PCS | $4.15 |
+| M3 heat-set inserts | [AliExpress](https://www.aliexpress.us/item/3256804349544912.html) | M3 (OD 4.5mm) 50pcs, Length 5mm | $3.40 |
+| Male header pins, 2.54 mm | [AliExpress](https://www.aliexpress.us/item/3256801327743339.html) | 11.5mm 10pcs | $3.12 |
+| **Core total** | | | **$56.36** |
+| BH1750 light sensor (optional, auto-dim) | [AliExpress](https://www.aliexpress.us/item/3256810260002611.html) | GY-302 1PCS | $2.19 |
+| Dot-matrix clock | [AliExpress (OPEN-SMART 0.8" 16x8 I2C)](https://www.aliexpress.us/item/3256804212916663.html) | Red (the only color) | $2.82 |
+| **Total with the sensor and clock** | | | **$61.37** |
+
+Not in the total:
+- **M3 countersunk screws:** Home Depot Everbilt packs, 2 × M3×10 for the frame plus 10 × M3×8 for everything else (about $3–7). Or the AliExpress kit below.
+- **From your own supplies:** 470 Ω resistor (220 Ω–1 kΩ works), 1000 µF capacitor (470–2200 µF, rated 10 V or more), wire (22 AWG or thicker for the LED power), a CR2032, the fabric (a thin, light-colored woven shirt works), a USB-C charger that does 5 V 3 A (an iPhone 20 W brick does), the ESP32 and the PLA.
+- **Clock:** the OPEN-SMART board uses a VK16K33, which is HT16K33-compatible, so it runs on the existing code. If it doesn't light up at address 0x70, or the digits come out mirrored, see the README. If you'd rather have yellow, [Adafruit's yellow FeatherWing](https://www.adafruit.com/product/3153) ($11.95 + shipping, a solder-it-yourself kit) swaps straight in.
 
 > **Cheaper build:** the sleep sounds are now synthesized on the ESP32, so the **microSD module and card are optional** (only for your own WAVs). See [Lean build](#lean-build) at the end.
 
@@ -21,7 +50,7 @@ Picked on Amazon on 2026-10-20, with each listing's specs checked against this b
 | microSD module (SPI), optional | [HiLetgo 5 pcs](https://www.amazon.com/dp/B07BJ2P6X6) | $6.99 | Has its own regulator: power it from 5 V |
 | microSD card, 32 GB, optional | [SanDisk Ultra 32GB](https://www.amazon.com/dp/B00M55C0NS) | $19.85 | Any 32 GB or smaller card works (FAT32) |
 | Rotary encoder | [KY-040, 5 pcs](https://www.amazon.com/dp/B06XQTHDRR) | $9.39 | Built-in 10 kΩ pull-ups (GPIO34/35 need them); 6 mm D shaft fits the knob |
-| 2 × 12 mm momentary buttons | [Gebildet 5 pcs, prewired](https://www.amazon.com/dp/B08L49F7DV) | $7.99 | Fits a 12 mm hole. Pick the **Flat Head** option for a cleaner top. |
+| 2 × 12 mm momentary buttons | [Gebildet 5 pcs, prewired, Flat Head](https://www.amazon.com/dp/B0B8Z14K3T) | $7.99 | Fits a 12 mm hole. This link opens on **SS-Momentary-5pcs**, the Flat Head option. |
 | USB-C power input | [eleUniverse 2 pcs, dual 5.1 kΩ](https://www.amazon.com/dp/B0GR8SNSCQ) | $8.90 | Has the CC resistors USB-C chargers need; 3 A. New listing with no reviews yet, but the specs match. |
 | 5 V 3 A USB-C supply | [5 V 3 A, 5 ft cable](https://www.amazon.com/dp/B09JW4QQJ2) | $9.99 | Raspberry Pi-style, fixed cable |
 | Sleep radar HLK-LD2410C | [AEDIKO 2 pcs](https://www.amazon.com/dp/B0GQYYTJPS) | $13.99 | Only 9 reviews; [3-pack alternative](https://www.amazon.com/dp/B0CH8CRDS6). The frame pocket is 22 × 16 mm: measure yours and set `radar_size` if it differs. |
@@ -31,7 +60,8 @@ Picked on Amazon on 2026-10-20, with each listing's specs checked against this b
 
 | Part | Where | Why |
 |---|---|---|
-| Dot-matrix clock: **Adafruit 0.8" 8x16 LED Matrix FeatherWing**, warm white | adafruit.com (search "8x16 LED Matrix FeatherWing") | Amazon only had no-review or 1★ generic boards, a 64 mm red one that doesn't fit the pocket, and a white one with no size or wiring info. The Adafruit board runs from 3V3, so it needs no level shifter. |
+| Dot-matrix clock: **OPEN-SMART 0.8" 16x8 I2C**, red | [AliExpress](https://www.aliexpress.us/item/3256804212916663.html), $2.82 | The cheapest board that fits: the same 0.8" grids, with an HT16K33-compatible chip. |
+| …or **Adafruit 0.8" 8x16 LED Matrix FeatherWing** | adafruit.com: [white](https://www.adafruit.com/product/3149) $19.95, [yellow](https://www.adafruit.com/product/3153) $11.95, plus shipping | For a white or yellow clock. Amazon only had no-review or 1★ generic boards, a 64 mm red one that doesn't fit the pocket, and 1.2" boards that are too big. Both boards run from 3V3, so neither needs a level shifter. |
 
 ## Wiring and build supplies
 
@@ -52,7 +82,7 @@ Notes:
 - **Screws:** countersunk heads work everywhere in this build, including the spots the assembly guide lists as pan head.
 - **Protoboard holes:** the devkit standoffs are 22 × 60 mm apart. Drill the protoboard to match, or set `pcb_holes` in the model to your board's holes.
 - **Fabric:** before gluing, hold the linen up to a lamp. It should glow; if it's too dense, use a thinner weave.
-- **Level shifter:** a BSS138 I2C level shifter is only needed if you use a 5 V clock board instead of the Adafruit one.
+- **Level shifter:** a BSS138 I2C level shifter is only needed if you power the clock board from 5 V. Power the OPEN-SMART or Adafruit board from 3V3 instead.
 
 ## Lean build
 
@@ -82,16 +112,16 @@ The same lean build, one clock, every function. Prices checked 2026-10-20. AliEx
 | Speaker 2" 4 Ω 3 W | [Gikfun, 2 pcs](https://www.amazon.com/dp/B01CHYIU26) **$11.49**, 776 reviews | [SOTAMIA 50 mm, 2 pcs](https://www.aliexpress.us/item/3256808046771474.html) **$7.34**, 528 sold | Gikfun is the better-proven one; both fit the seat (glue it in) |
 | DS3231 RTC | [2 pcs](https://www.amazon.com/dp/B09LLMYBM1) **$7.99**, 4.4★ | [1 pc, Choice](https://www.aliexpress.us/item/3256806957282138.html) **$3.14**, 4.8★, 4,000+ sold | Pick the "DS3231SN" option: the blue board with the coin-cell holder. "M" chips are less accurate but still work. |
 | KY-040 encoder | [5 pcs](https://www.amazon.com/dp/B06XQTHDRR) **$9.39**, 4.5★ | [1 pc + knob](https://www.aliexpress.us/item/2255800145982269.html) **$1.48**, 4.7★, 1,000+ sold | Same module |
-| 2 × 12 mm buttons | [Gebildet, 5 pcs](https://www.amazon.com/dp/B08L49F7DV) **$7.99**, 981 reviews | [1 pc each](https://www.aliexpress.us/item/2251832630370510.html) **$4.40** for 2, 90 sold | Amazon's are much better reviewed. The AliExpress listing is the weakest here. |
-| USB-C power input | [2 pcs](https://www.amazon.com/dp/B0GR8SNSCQ) **$8.90**, no reviews | [CC1/CC2 5.1 kΩ, Choice](https://www.aliexpress.us/item/3256805787035895.html) **$2.86**, 5★, 347 sold | AliExpress is the safer pick here: proven listing |
+| 2 × 12 mm buttons | [Gebildet, 5 pcs, Flat Head](https://www.amazon.com/dp/B0B8Z14K3T) **$7.99**, 981 reviews | [1 pc each](https://www.aliexpress.us/item/2251832630370510.html) **$4.40** for 2, 90 sold | Amazon's are much better reviewed. The AliExpress listing is the weakest here. |
+| USB-C power input | [2 pcs](https://www.amazon.com/dp/B0GR8SNSCQ) **$8.90**, no reviews | [CC1/CC2 5.1 kΩ, Choice](https://www.aliexpress.us/item/3256805787035895.html) **$2.86**, 5★, 347 sold | AliExpress is the safer pick here: proven listing. Pick "army green": the blue board, which visibly has both 5.1 kΩ resistors. |
 | HLK-LD2410C radar | [2 pcs](https://www.amazon.com/dp/B0GQYYTJPS) **$13.99**, 9 reviews | [1 pc, Choice](https://www.aliexpress.us/item/3256806849046153.html) **$5.91**, 4.8★, 5,000+ sold | Same Hi-Link module. Pick "LD2410C", not B or 2420. |
 | Jumper wires, 40 F-F | [40 pcs](https://www.amazon.com/dp/B0BRTJQGS6) **$3.99**, 4.8★ | [40 pcs, pick F-F 20 cm](https://www.aliexpress.us/item/3256812379729214.html) **$3.32** | Same |
 | Protoboards | [58 pcs kit + headers](https://www.amazon.com/dp/B0CKZ7GFSK) **$13.99** | [5 pcs, pick 3x7](https://www.aliexpress.us/item/3256808585524708.html) **$4.15**, 560 sold | The Amazon kit includes headers and terminals |
-| M3 heat-set inserts | [100 pcs, M3×5.7×4.6](https://www.amazon.com/dp/B0DQL4ZSCP) **$5.99** | [pick M3, longest](https://www.aliexpress.us/item/3256804349544912.html) **$2.71**, 54,000+ sold | Amazon's size is confirmed; on AliExpress pick M3 × 5.7 × 4.6 if offered |
+| M3 heat-set inserts | [100 pcs, M3×5.7×4.6](https://www.amazon.com/dp/B0DQL4ZSCP) **$5.99** | [pick M3 (OD 4.5mm), Length 5mm](https://www.aliexpress.us/item/3256804349544912.html) **$3.40**, 54,000+ sold | The holes are Ø4.0 × 5 mm. A 5 mm insert sits flush; OD 5 mm or wider can split the thin posts. |
 | M3 countersunk screws | [630 pcs kit](https://www.amazon.com/dp/B0F8HPFXX5) **$8.99** | [kit, pick M3](https://www.aliexpress.us/item/3256805779852270.html) **$5.65**, 4.8★ | Same |
-| **Total** | **$129.55** | **$54.89** | |
+| **Total** | **$129.55** | **$55.58** | |
 | Light sensor (optional) | [BH1750, 3 pcs](https://www.amazon.com/dp/B00M0F29OS) +$7.49 | [BH1750 GY-302, Choice](https://www.aliexpress.us/item/3256810260002611.html) +$2.19, 5★, 414 sold | |
-| Dot-matrix clock (both) | [Adafruit 0.8" 8x16 FeatherWing](https://www.adafruit.com/product/3149) white $19.95, or yellow $11.95, plus shipping | same | No good match on either site |
+| Dot-matrix clock | Not on Amazon: [Adafruit 0.8" 8x16 FeatherWing](https://www.adafruit.com/product/3149) from adafruit.com, white $19.95 or yellow $11.95, plus shipping | [OPEN-SMART 0.8" 16x8 I2C](https://www.aliexpress.us/item/3256804212916663.html) **$2.82**, 4.7★, 147 sold, red only | Same 0.8" grids and the same kind of chip (VK16K33, HT16K33-compatible) |
 | Free if you have them | USB-C phone charger (5 V 3 A), fabric (old linen shirt or muslin), CR2032, hot glue | | |
 
 **Quality difference:** most of these are the same Chinese-made boards on both sites; Amazon sellers often rebrand them.

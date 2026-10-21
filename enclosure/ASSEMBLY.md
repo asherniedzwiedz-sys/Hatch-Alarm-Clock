@@ -66,7 +66,7 @@ Every part fits a 220 × 220 mm bed (largest footprint 184 × 140 mm).
 
 - **Fabric:** about 200 × 160 mm of thin, loosely woven linen or linen-look fabric. Hold it up to a bulb first: it should glow warm, not block the light.
 - **LED strip:** 40 × WS2812B at **96 or 100 LED/m**, 10 mm wide, cut into rows of 13, 12, 9 and 6 LEDs. The rows are generated from `led_count` / `led_per_m`, and the model refuses settings that don't fit. 60 LED/m fits only ~29 LEDs in this dome.
-- **Clock:** Adafruit 0.8" 8x16 LED Matrix FeatherWing (HT16K33, 40.6 × 20.3 mm of LEDs). Its LEDs sit in a 3 mm locating rim on the frame, with the wider board behind. Warm white looks closest to the original.
+- **Clock:** a 0.8" 16x8 HT16K33-type matrix with 40.6 × 20.3 mm of LEDs. Use either the OPEN-SMART 0.8" 16x8 I2C board (about 41 × 23 mm, with 4 pins out the right side) or Adafruit's 0.8" 8x16 LED Matrix FeatherWing. The LEDs sit in a 3 mm locating rim on the frame, with the board behind. Connect it with jumper wires and only a dab of glue, so it can be swapped later.
 - **Sleep radar:** HLK-LD2410C (22 × 16 mm; the pocket is set by `radar_size`, so measure yours).
 - **Inserts:** 8 × M3 heat-set (Ø4.0 hole, 5 mm): 2 in the frame, 4 in the shell's back bosses, 2 in the light-box posts. Add 4 more for the devkit standoffs.
 - **Screws:**
