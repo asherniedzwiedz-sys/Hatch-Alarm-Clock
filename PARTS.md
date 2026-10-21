@@ -70,7 +70,7 @@ Ordering single units from AliExpress instead brings the parts to roughly **$35�
 
 ## Amazon vs AliExpress
 
-The same lean build, one clock, every function. Prices checked 2026-10-20. AliExpress prices are the regular ones, not the one-time "new shopper" deals. AliExpress shipping showed free, with delivery around 6–11 days.
+The same lean build, one clock, every function. Prices checked 2026-10-20. AliExpress prices are the regular ones, not the one-time "new shopper" deals. On AliExpress, **Choice** items ship together, and free once they add up to about $10. Other AliExpress sellers each charge their own shipping, about $4–6 per store, so the radar, real-time clock, USB-C board and light sensor below are all Choice listings (swapped in 2026-10-21). Delivery takes about 6–11 days.
 
 | Part | Amazon | AliExpress | Quality notes |
 |---|---|---|---|
@@ -80,17 +80,17 @@ The same lean build, one clock, every function. Prices checked 2026-10-20. AliEx
 | 1000 µF 16 V capacitor | [10 pcs](https://www.amazon.com/dp/B0D78PBK4K) **$5.99** | [pick 16V 1000uF](https://www.aliexpress.us/item/3256811625053645.html) **$2.75**, 4.8★ | Same part |
 | MAX98357A amp | [2 pcs](https://www.amazon.com/dp/B0DPJRLMDJ) **$6.88**, 4.5★ | [1 pc](https://www.aliexpress.us/item/3256807442706139.html) **$2.34**, 4.8★, 4,000+ sold | Same board design |
 | Speaker 2" 4 Ω 3 W | [Gikfun, 2 pcs](https://www.amazon.com/dp/B01CHYIU26) **$11.49**, 776 reviews | [SOTAMIA 50 mm, 2 pcs](https://www.aliexpress.us/item/3256808046771474.html) **$7.34**, 528 sold | Gikfun is the better-proven one; both fit the seat (glue it in) |
-| DS3231 RTC | [2 pcs](https://www.amazon.com/dp/B09LLMYBM1) **$7.99**, 4.4★ | [1 pc](https://www.aliexpress.us/item/3256810013782326.html) **$2.83**, 4.9★, 900+ sold | Pick the "DS3231SN" option. "M" chips are less accurate but still work. |
+| DS3231 RTC | [2 pcs](https://www.amazon.com/dp/B09LLMYBM1) **$7.99**, 4.4★ | [1 pc, Choice](https://www.aliexpress.us/item/3256806957282138.html) **$3.14**, 4.8★, 4,000+ sold | Pick the "DS3231SN" option: the blue board with the coin-cell holder. "M" chips are less accurate but still work. |
 | KY-040 encoder | [5 pcs](https://www.amazon.com/dp/B06XQTHDRR) **$9.39**, 4.5★ | [1 pc + knob](https://www.aliexpress.us/item/2255800145982269.html) **$1.48**, 4.7★, 1,000+ sold | Same module |
 | 2 × 12 mm buttons | [Gebildet, 5 pcs](https://www.amazon.com/dp/B08L49F7DV) **$7.99**, 981 reviews | [1 pc each](https://www.aliexpress.us/item/2251832630370510.html) **$4.40** for 2, 90 sold | Amazon's are much better reviewed. The AliExpress listing is the weakest here. |
-| USB-C power input | [2 pcs](https://www.amazon.com/dp/B0GR8SNSCQ) **$8.90**, no reviews | [dual 5.1 kΩ](https://www.aliexpress.us/item/3256807162617616.html) **$0.41**, 4.8★, 2,000+ sold | AliExpress is the safer pick here: proven listing |
-| HLK-LD2410C radar | [2 pcs](https://www.amazon.com/dp/B0GQYYTJPS) **$13.99**, 9 reviews | [1 pc](https://www.aliexpress.us/item/3256811718206907.html) **$4.19**, 571 sold | Same Hi-Link module |
+| USB-C power input | [2 pcs](https://www.amazon.com/dp/B0GR8SNSCQ) **$8.90**, no reviews | [CC1/CC2 5.1 kΩ, Choice](https://www.aliexpress.us/item/3256805787035895.html) **$2.86**, 5★, 347 sold | AliExpress is the safer pick here: proven listing |
+| HLK-LD2410C radar | [2 pcs](https://www.amazon.com/dp/B0GQYYTJPS) **$13.99**, 9 reviews | [1 pc, Choice](https://www.aliexpress.us/item/3256806849046153.html) **$5.91**, 4.8★, 5,000+ sold | Same Hi-Link module. Pick "LD2410C", not B or 2420. |
 | Jumper wires, 40 F-F | [40 pcs](https://www.amazon.com/dp/B0BRTJQGS6) **$3.99**, 4.8★ | [40 pcs, pick F-F 20 cm](https://www.aliexpress.us/item/3256812379729214.html) **$3.32** | Same |
 | Protoboards | [58 pcs kit + headers](https://www.amazon.com/dp/B0CKZ7GFSK) **$13.99** | [5 pcs, pick 3x7](https://www.aliexpress.us/item/3256808585524708.html) **$4.15**, 560 sold | The Amazon kit includes headers and terminals |
 | M3 heat-set inserts | [100 pcs, M3×5.7×4.6](https://www.amazon.com/dp/B0DQL4ZSCP) **$5.99** | [pick M3, longest](https://www.aliexpress.us/item/3256804349544912.html) **$2.71**, 54,000+ sold | Amazon's size is confirmed; on AliExpress pick M3 × 5.7 × 4.6 if offered |
 | M3 countersunk screws | [630 pcs kit](https://www.amazon.com/dp/B0F8HPFXX5) **$8.99** | [kit, pick M3](https://www.aliexpress.us/item/3256805779852270.html) **$5.65**, 4.8★ | Same |
-| **Total** | **$129.55** | **$50.41** | |
-| Light sensor (optional) | [BH1750, 3 pcs](https://www.amazon.com/dp/B00M0F29OS) +$7.49 | [BH1750](https://www.aliexpress.us/item/3256812166809412.html) +$4.05, 516 sold | |
+| **Total** | **$129.55** | **$54.89** | |
+| Light sensor (optional) | [BH1750, 3 pcs](https://www.amazon.com/dp/B00M0F29OS) +$7.49 | [BH1750 GY-302, Choice](https://www.aliexpress.us/item/3256810260002611.html) +$2.19, 5★, 414 sold | |
 | Dot-matrix clock (both) | [Adafruit 0.8" 8x16 FeatherWing](https://www.adafruit.com/product/3149) white $19.95, or yellow $11.95, plus shipping | same | No good match on either site |
 | Free if you have them | USB-C phone charger (5 V 3 A), fabric (old linen shirt or muslin), CR2032, hot glue | | |
 
@@ -102,7 +102,7 @@ What Amazon gets you:
 - The better-reviewed buttons and speaker.
 
 What AliExpress gets you:
-- Single parts at about $0.40–4.60 each.
+- Single parts at about $1.50–6 each.
 - Usually longer review histories on the modules.
 - Some risk of a dead or relabeled part. Test each module when it arrives.
 
