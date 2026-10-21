@@ -9,7 +9,11 @@
 
 struct Settings {
   char tz[64] = "UTC0";  // POSIX TZ, e.g. "CET-1CEST,M3.5.0,M10.5.0/3"
+#ifdef WOKWI
+  char ssid[33] = "Wokwi-GUEST", pass[65] = "", adminPass[33] = "";  // the simulator's open Wi-Fi; it has no setup AP
+#else
   char ssid[33] = "", pass[65] = "", adminPass[33] = "";
+#endif
   uint8_t sunriseMax = 100;  // % of the LED current budget
   uint8_t nightPct = 30;
   uint16_t nightKelvin = 2700;

@@ -122,12 +122,25 @@ static void updateClock() {
 
 void setup() {
   Serial.begin(115200);
-  if (esp_reset_reason() == ESP_RST_BROWNOUT)  // the supply sagged under LED + amp + Wi-Fi load
-    Serial.println("Last reset was a brownout: lower Sunrise max or volume, or use a 5 V 3 A supply");
+  const bool brownout = esp_reset_reason() == ESP_RST_BROWNOUT;  // the supply sagged under LED + amp + Wi-Fi load
+  if (brownout) Serial.println("Last reset was a brownout: lower Sunrise max or volume, or use a 5 V 3 A supply");
   Wire.begin(PIN_SDA, PIN_SCL, 400000);
   light.begin();
   input.begin();
   if (!sched.begin()) Serial.println("DS3231 not responding: alarms need the RTC or Wi-Fi time");
+#ifdef WOKWI
+  if (!sched.count && sched.timeValid()) {  // simulator: a one-time alarm 3 min out, so sunrise starts now and rings soon
+    const time_t t = time(nullptr) + 180;
+    tm lt;
+    localtime_r(&t, &lt);
+    JsonDocument doc;
+    JsonObject a = doc.to<JsonArray>().add<JsonObject>();
+    a["hour"] = lt.tm_hour;
+    a["minute"] = lt.tm_min;
+    a["enabled"] = true;
+    if (sched.setAlarms(doc.as<JsonArrayConst>())) Serial.printf("Test alarm set for %02d:%02d\n", lt.tm_hour, lt.tm_min);
+  }
+#endif
   if (!audio.begin()) Serial.println("No SD card: built-in sleep sounds only");
   audio.setVolume(sched.settings.soundVolume);
 
@@ -141,6 +154,7 @@ void setup() {
   light.setNight(false, sched.settings.nightPct, sched.settings.nightKelvin);
   web.begin(sched, light, audio, sleepMon, gLock, lux, clockDisplay.present());
   if (!sched.timeValid()) light.flash(kRed, 5);  // set the time from the web UI
+  else if (brownout) light.flash(kAmber, 3);     // visible without a serial monitor
   Serial.printf("Sunrise clock %s ready\n", FW_VERSION);
 }
 

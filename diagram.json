@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "author": "Sunrise Clock",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "board-esp32-devkit-c-v4", "id": "esp", "top": 0, "left": 0, "attrs": {} },
+    { "type": "wokwi-led-strip", "id": "strip", "top": -160, "left": -220, "attrs": { "pixels": "40" } },
+    { "type": "wokwi-ds1307", "id": "rtc", "top": 170, "left": 230, "attrs": {} },
+    { "type": "wokwi-ky-040", "id": "knob", "top": 20, "left": 230, "attrs": {} },
+    { "type": "wokwi-pushbutton", "id": "alarmBtn", "top": 230, "left": -200, "attrs": { "color": "red" } },
+    { "type": "wokwi-pushbutton", "id": "lightBtn", "top": 310, "left": -200, "attrs": { "color": "yellow" } }
+  ],
+  "connections": [
+    [ "esp:TX", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX", "$serialMonitor:TX", "", [] ],
+    [ "esp:16", "strip:DIN", "green", [] ],
+    [ "esp:5V", "strip:VDD", "red", [] ],
+    [ "esp:GND.1", "strip:VSS", "black", [] ],
+    [ "esp:21", "rtc:SDA", "blue", [] ],
+    [ "esp:22", "rtc:SCL", "violet", [] ],
+    [ "esp:5V", "rtc:5V", "red", [] ],
+    [ "esp:GND.2", "rtc:GND", "black", [] ],
+    [ "esp:34", "knob:CLK", "orange", [] ],
+    [ "esp:35", "knob:DT", "orange", [] ],
+    [ "esp:33", "knob:SW", "orange", [] ],
+    [ "esp:3V3", "knob:VCC", "red", [] ],
+    [ "esp:GND.2", "knob:GND", "black", [] ],
+    [ "esp:27", "alarmBtn:1.l", "green", [] ],
+    [ "esp:GND.1", "alarmBtn:2.l", "black", [] ],
+    [ "esp:14", "lightBtn:1.l", "green", [] ],
+    [ "esp:GND.1", "lightBtn:2.l", "black", [] ]
+  ],
+  "dependencies": {}
+}

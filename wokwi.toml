@@ -1,0 +1,10 @@
+# Wokwi simulator (VS Code extension). Build first:  pio run -e wokwi -t buildfs  then  pio run -e wokwi
+[wokwi]
+version = 1
+firmware = '.pio/build/wokwi/firmware.merged.bin'
+elf = '.pio/build/wokwi/firmware.elf'
+
+# The clock's web page at http://localhost:8180 while the simulation runs
+[[net.forward]]
+from = "localhost:8180"
+to = "target:80"

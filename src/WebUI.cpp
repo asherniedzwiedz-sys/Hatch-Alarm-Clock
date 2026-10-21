@@ -170,6 +170,9 @@ bool WebUI::sameOrigin(AsyncWebServerRequest* r) {
   host.toLowerCase();
   const int colon = host.indexOf(':');
   const String name = colon < 0 ? host : host.substring(0, colon);
+#ifdef WOKWI
+  if (name == "localhost") return true;  // the simulator's port forward; never in a real build
+#endif
   if (name != WiFi.localIP().toString() && name != WiFi.softAPIP().toString() && name != HOSTNAME &&
       name != String(HOSTNAME) + ".local")
     return false;

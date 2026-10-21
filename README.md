@@ -52,11 +52,13 @@ Hardware notes that matter:
 - The radar sits behind the lower-left of the fabric, antenna side forward, with nothing metal in front of it. Put the clock at mattress height, facing the bed. Set **Bed distance** in the web UI to just past the far side of the bed, so someone walking around the room doesn't count. Then watch the live **motion** value while you lie still and while you turn over. If lying still reads above ~15, raise `SLEEP_MOVE_THRESHOLD` in `src/Config.h`.
 - **GPIO34/35 have no internal pull-ups.** Use 10 kΩ pull-ups to 3V3 on encoder A and B; KY-040 boards already have them. If one click moves two steps, set `ENC_STEPS_PER_DETENT = 2` in `src/Config.h`. If the direction is reversed, set `ENC_DIRECTION = -1`.
 - **DS3231 "ZS-042" boards charge the coin cell** through a diode and 200 Ω resistor meant for an LIR2032. With a CR2032, remove that resistor or diode, or the cell can swell.
-- LED current is capped in firmware at `LED_MAX_MA = 1800`, which leaves headroom on the 3 A supply for the ESP32 and the amp. Full 3200 K sunrise draws about 1.76 A. If the clock reboots when the alarm goes off, the serial monitor shows `Last reset was a brownout` on the next boot. Lower **Sunrise max** or the volume, or use a stronger supply. Use ≥ 22 AWG for the LED power wires, and inject 5 V at both ends of the strip, using the second hole in the LED plate.
+- LED current is capped in firmware at `LED_MAX_MA = 1800`, which leaves headroom on the 3 A supply for the ESP32 and the amp. Full 3200 K sunrise draws about 1.76 A. If the clock reboots when the alarm goes off, it blinks amber 3 times as it starts back up, and the serial monitor shows `Last reset was a brownout`. Lower **Sunrise max** or the volume, or use a stronger supply. Use ≥ 22 AWG for the LED power wires, and inject 5 V at both ends of the strip, using the second hole in the LED plate.
 - Mount the BH1750 under the top-wall window, facing up and shielded from the diffuser. Otherwise it measures its own light and auto-dim drifts up.
 - Do not plug in the USB cable and the 5 V supply at the same time unless your devkit has a diode on USB VBUS.
 
 ## Build and flash
+
+Before soldering or printing, test everything on the desk with [BENCH_TEST.md](BENCH_TEST.md). It starts with a Wokwi simulation you can run before buying parts.
 
 ```bash
 pio run -e esp32 -t upload
