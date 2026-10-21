@@ -5,8 +5,8 @@
 
 #include "Config.h"
 
-static bool command(uint8_t c) {
-  Wire.beginTransmission(CLOCK_ADDR);
+bool ClockDisplay::command(uint8_t c) {
+  Wire.beginTransmission(addr_);
   Wire.write(c);
   return Wire.endTransmission() == 0;
 }
@@ -18,7 +18,10 @@ static uint16_t reverse16(uint16_t v) {
 }
 
 bool ClockDisplay::begin() {
-  ok_ = command(0x21);  // system oscillator on
+  // The address jumpers on HT16K33-type boards give 0x70-0x77, and clones ship set differently.
+  // Nothing else on this bus lives there (DS3231 0x68, its EEPROM 0x57, BH1750 0x23).
+  for (addr_ = CLOCK_ADDR; addr_ < CLOCK_ADDR + 8; addr_++)
+    if ((ok_ = command(0x21))) break;  // system oscillator on
   return ok_;
 }
 
@@ -32,7 +35,7 @@ void ClockDisplay::show(const uint16_t rows[8], uint8_t level) {
   if (synced_ && !memcmp(rows, shown_, sizeof shown_)) return;  // only touch I2C when a digit changes
   memcpy(shown_, rows, sizeof shown_);
   synced_ = true;
-  Wire.beginTransmission(CLOCK_ADDR);
+  Wire.beginTransmission(addr_);
   Wire.write((uint8_t)0x00);  // display RAM: two bytes per row, columns 0-7 then 8-15
   for (int r = 0; r < 8; r++) {
     uint16_t v = rows[CLOCK_FLIP_Y ? 7 - r : r];

@@ -32,7 +32,7 @@ Not in the total:
   - 6 × M3×8 countersunk for the back cover and light box
   - 4 × M3×6 for the ESP32 board, pan head if the store has it. An M3×8 bottoms out there.
 - **From your own supplies:** 470 Ω resistor (220 Ω–1 kΩ works), 1000 µF capacitor (470–2200 µF, rated 10 V or more), wire (22 AWG or thicker for the LED power), a CR2032, the fabric (a thin, light-colored woven shirt works), a USB-C charger that does 5 V 3 A (an iPhone 20 W brick does), the ESP32 and the PLA.
-- **Clock:** the OPEN-SMART board uses a VK16K33, which is HT16K33-compatible, so it runs on the existing code. If it doesn't light up at address 0x70, or the digits come out mirrored, see the README. If you'd rather have yellow, [Adafruit's yellow FeatherWing](https://www.adafruit.com/product/3153) ($11.95 + shipping, a solder-it-yourself kit) swaps straight in.
+- **Clock:** the OPEN-SMART board uses a VK16K33, which is HT16K33-compatible, so it runs on the existing code. The firmware finds it at any I2C address from 0x70 to 0x77. If the digits come out mirrored, see the README. If you'd rather have yellow, [Adafruit's yellow FeatherWing](https://www.adafruit.com/product/3153) ($11.95 + shipping, a solder-it-yourself kit) swaps straight in.
 
 > **Cheaper build:** the sleep sounds are now synthesized on the ESP32, so the **microSD module and card are optional** (only for your own WAVs). See [Lean build](#lean-build) at the end.
 

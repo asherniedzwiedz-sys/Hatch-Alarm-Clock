@@ -35,7 +35,7 @@ enclosure/            OpenSCAD model, STLs, build/check script, assembly guide
 | Speaker 2" 4 Ω 3 W | + / − | MAX98357A speaker terminals |
 | DS3231 + CR2032 | VCC / GND / SDA / SCL | 3V3 / GND / **GPIO21 / GPIO22** |
 | BH1750 (optional) | VCC / GND / SDA / SCL / ADDR | 3V3 / GND / GPIO21 / GPIO22 / GND (address 0x23) |
-| HT16K33-type 16×8 dot clock (OPEN-SMART 0.8" 16x8 I2C or Adafruit 0.8" FeatherWing, optional) | VCC (3V on Adafruit's) / GND / SDA / SCL | 3V3 / GND / GPIO21 / GPIO22 (address 0x70) |
+| HT16K33-type 16×8 dot clock (OPEN-SMART 0.8" 16x8 I2C or Adafruit 0.8" FeatherWing, optional) | VCC (3V on Adafruit's) / GND / SDA / SCL | 3V3 / GND / GPIO21 / GPIO22 (any address 0x70-0x77, found at boot) |
 | HLK-LD2410C radar (sleep tracking) | VCC / GND / TX / RX / OUT | 5 V / GND / **GPIO4** / **GPIO13** / not connected (3.3 V UART, 256000 baud) |
 | microSD (VSPI, optional) | CS / SCK / MISO / MOSI | **GPIO5 / 18 / 19 / 23**; VCC 5 V if the module has a regulator, else 3V3. Only for your own WAVs |
 | Rotary encoder | A(CLK) / B(DT) / SW / + / GND | **GPIO34 / GPIO35 / GPIO33** / 3V3 / GND |
@@ -48,11 +48,11 @@ Hardware notes that matter:
   - the **OPEN-SMART 0.8" 16x8 I2C** board (red only; its VK16K33 chip is HT16K33-compatible);
   - Adafruit's **0.8" 8x16 LED Matrix FeatherWing**.
 
-  Power either one from **3V3** and wire SDA/SCL straight to GPIO21/22, with no level shifter. A board powered from 5 V needs a BSS138 I2C level shifter instead, because the ESP32 isn't 5 V tolerant. If the clock stays dark, check which address the board answers at and set `CLOCK_ADDR` to match. If the digits come out mirrored or upside down, flip `CLOCK_FLIP_X` / `CLOCK_FLIP_Y`.
+  Power either one from **3V3** and wire SDA/SCL straight to GPIO21/22, with no level shifter. A board powered from 5 V needs a BSS138 I2C level shifter instead, because the ESP32 isn't 5 V tolerant. The firmware finds the board at any address from 0x70 to 0x77. At boot, the serial monitor (115200 baud) prints `Dot clock found at 0x..`, or `No dot clock answered`, which means check the 4 wires. If the digits come out mirrored or upside down, flip `CLOCK_FLIP_X` / `CLOCK_FLIP_Y`.
 - The radar sits behind the lower-left of the fabric, antenna side forward, with nothing metal in front of it. Put the clock at mattress height, facing the bed. Set **Bed distance** in the web UI to just past the far side of the bed, so someone walking around the room doesn't count. Then watch the live **motion** value while you lie still and while you turn over. If lying still reads above ~15, raise `SLEEP_MOVE_THRESHOLD` in `src/Config.h`.
 - **GPIO34/35 have no internal pull-ups.** Use 10 kΩ pull-ups to 3V3 on encoder A and B; KY-040 boards already have them. If one click moves two steps, set `ENC_STEPS_PER_DETENT = 2` in `src/Config.h`. If the direction is reversed, set `ENC_DIRECTION = -1`.
 - **DS3231 "ZS-042" boards charge the coin cell** through a diode and 200 Ω resistor meant for an LIR2032. With a CR2032, remove that resistor or diode, or the cell can swell.
-- LED current is capped in firmware at `LED_MAX_MA = 1800`, which leaves headroom on the 3 A supply for the ESP32 and the amp. Full 3200 K sunrise draws about 1.76 A. Use ≥ 22 AWG for the LED power wires, and inject 5 V at both ends of the strip, using the second hole in the LED plate.
+- LED current is capped in firmware at `LED_MAX_MA = 1800`, which leaves headroom on the 3 A supply for the ESP32 and the amp. Full 3200 K sunrise draws about 1.76 A. If the clock reboots when the alarm goes off, the serial monitor shows `Last reset was a brownout` on the next boot. Lower **Sunrise max** or the volume, or use a stronger supply. Use ≥ 22 AWG for the LED power wires, and inject 5 V at both ends of the strip, using the second hole in the LED plate.
 - Mount the BH1750 under the top-wall window, facing up and shielded from the diffuser. Otherwise it measures its own light and auto-dim drifts up.
 - Do not plug in the USB cable and the 5 V supply at the same time unless your devkit has a diode on USB VBUS.
 

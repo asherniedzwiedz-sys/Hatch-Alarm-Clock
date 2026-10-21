@@ -18,7 +18,7 @@ constexpr float LED_MAX_MA = 1800.0f;        // LED share of the 5 V 3 A supply;
 constexpr int ENC_STEPS_PER_DETENT = 4;      // quadrature edges per click (2 on some encoders)
 constexpr int ENC_DIRECTION = 1;             // -1 if clockwise turns the wrong way
 
-constexpr int CLOCK_ADDR = 0x70;            // optional HT16K33 16x8 dot clock on the I2C bus
+constexpr uint8_t CLOCK_ADDR = 0x70;        // optional HT16K33-type 16x8 dot clock: found anywhere in 0x70-0x77
 constexpr bool CLOCK_FLIP_X = false, CLOCK_FLIP_Y = false;  // if the digits come out mirrored/upside down
 
 // ---- Behaviour ----

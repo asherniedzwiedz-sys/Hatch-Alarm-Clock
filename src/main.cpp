@@ -122,6 +122,8 @@ static void updateClock() {
 
 void setup() {
   Serial.begin(115200);
+  if (esp_reset_reason() == ESP_RST_BROWNOUT)  // the supply sagged under LED + amp + Wi-Fi load
+    Serial.println("Last reset was a brownout: lower Sunrise max or volume, or use a 5 V 3 A supply");
   Wire.begin(PIN_SDA, PIN_SCL, 400000);
   light.begin();
   input.begin();
@@ -132,7 +134,8 @@ void setup() {
   Wire.beginTransmission(BH1750_ADDR);
   Wire.write((uint8_t)0x10);  // continuous high-resolution mode
   if (Wire.endTransmission() == 0) lux = 50;
-  clockDisplay.begin();
+  if (clockDisplay.begin()) Serial.printf("Dot clock found at 0x%02X\n", clockDisplay.address());
+  else Serial.println("No dot clock answered at 0x70-0x77");
   sleepMon.begin();
 
   light.setNight(false, sched.settings.nightPct, sched.settings.nightKelvin);
