@@ -38,6 +38,7 @@ bool AudioEngine::begin() {
   if (i2s_driver_install(I2S_NUM_0, &cfg, 0, nullptr) != ESP_OK || i2s_set_pin(I2S_NUM_0, &pins) != ESP_OK)
     log_e("I2S init failed");
 
+  for (const char* n : SYNTH_NAMES) sounds_.push_back(n);  // built in, always there
   SPI.begin(PIN_SD_SCK, PIN_SD_MISO, PIN_SD_MOSI, PIN_SD_CS);
   sdOk_ = SD.begin(PIN_SD_CS, SPI, 20000000);
   if (sdOk_) {
@@ -48,7 +49,7 @@ bool AudioEngine::begin() {
       lower.toLowerCase();
       if (!f.isDirectory() && lower.endsWith(".wav") && n.length() < sizeof(Cmd::name)) sounds_.push_back(n);
     }
-    std::sort(sounds_.begin(), sounds_.end());
+    std::sort(sounds_.begin() + 5, sounds_.end());  // your WAVs, after the built-ins
   }
 
   queue_ = xQueueCreate(4, sizeof(Cmd));
@@ -107,6 +108,8 @@ void AudioEngine::task() {
     if (playing_ == Source::Off) continue;
     if (playing_ == Source::Chime) {
       renderChime(s_buf, FRAMES);
+    } else if (synth_.kind != SynthSound::None) {
+      for (size_t i = 0; i < FRAMES; i++) s_buf[2 * i] = s_buf[2 * i + 1] = synth_.next();
     } else if (!readWav(s_buf, FRAMES)) {
       log_e("SD read failed");
       close();
@@ -128,7 +131,8 @@ void AudioEngine::handle(const Cmd& c) {
     return;
   }
   if (file_) file_.close();
-  if (c.src == Source::Sound) {
+  synth_.start(c.src == Source::Sound ? synthByName(c.name) : SynthSound::None);
+  if (c.src == Source::Sound && synth_.kind == SynthSound::None) {
     char path[64];
     snprintf(path, sizeof path, "/sounds/%s", c.name);
     if (!openWav(path)) {
@@ -136,7 +140,7 @@ void AudioEngine::handle(const Cmd& c) {
       close();
       return;
     }
-  } else {
+  } else if (c.src == Source::Chime) {
     chimeT_ = 0;
     for (Voice& v : voices_) v.env = 0;
   }

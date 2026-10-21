@@ -1,5 +1,7 @@
 # Parts list
 
+> **Cheaper build:** the sleep sounds are now synthesized on the ESP32, so the **microSD module and card are optional** (only for your own WAVs). See [Lean build](#lean-build) at the end.
+
 Picked on Amazon on 2026-10-20, with each listing's specs checked against this build. Prices change. Most items are multipacks, so you'll have spares. Not included: the ESP32 devkit and the white and black PLA, which you already have.
 
 ## Electronics
@@ -14,8 +16,8 @@ Picked on Amazon on 2026-10-20, with each listing's specs checked against this b
 | Speaker, 2" 4 Ω 3 W | [Gikfun EK1725, 2 pcs](https://www.amazon.com/dp/B01CHYIU26) | $11.49 | No 57 mm 4 Ω 3 W driver is sold on Amazon; the model's seat is now set for this one (51 mm) |
 | DS3231 RTC (ZS-042) | [2 pcs with jumper wires](https://www.amazon.com/dp/B09LLMYBM1) | $7.99 | Remove the charging resistor before fitting a CR2032 |
 | CR2032 coin cells | [NICEBATT 24 pack](https://www.amazon.com/dp/B0F28618FV) | $7.99 | |
-| microSD module (SPI) | [HiLetgo 5 pcs](https://www.amazon.com/dp/B07BJ2P6X6) | $6.99 | Has its own regulator: power it from 5 V |
-| microSD card, 32 GB | [SanDisk Ultra 32GB](https://www.amazon.com/dp/B00M55C0NS) | $19.85 | Any 32 GB or smaller card works (FAT32) |
+| microSD module (SPI), optional | [HiLetgo 5 pcs](https://www.amazon.com/dp/B07BJ2P6X6) | $6.99 | Has its own regulator: power it from 5 V |
+| microSD card, 32 GB, optional | [SanDisk Ultra 32GB](https://www.amazon.com/dp/B00M55C0NS) | $19.85 | Any 32 GB or smaller card works (FAT32) |
 | Rotary encoder | [KY-040, 5 pcs](https://www.amazon.com/dp/B06XQTHDRR) | $9.39 | Built-in 10 kΩ pull-ups (GPIO34/35 need them); 6 mm D shaft fits the knob |
 | 2 × 12 mm momentary buttons | [Gebildet 5 pcs, prewired](https://www.amazon.com/dp/B08L49F7DV) | $7.99 | Fits a 12 mm hole. Pick the **Flat Head** option for a cleaner top. |
 | USB-C power input | [eleUniverse 2 pcs, dual 5.1 kΩ](https://www.amazon.com/dp/B0GR8SNSCQ) | $8.90 | Has the CC resistors USB-C chargers need; 3 A. New listing with no reviews yet, but the specs match. |
@@ -49,3 +51,17 @@ Notes:
 - **Protoboard holes:** the devkit standoffs are 22 × 60 mm apart. Drill the protoboard to match, or set `pcb_holes` in the model to your board's holes.
 - **Fabric:** before gluing, hold the linen up to a lamp. It should glow; if it's too dense, use a thinner weave.
 - **Level shifter:** a BSS138 I2C level shifter is only needed if you use a 5 V clock board instead of the Adafruit one.
+
+## Lean build
+
+The total above is mostly packaging: multipacks, plus supplies you may already have. For one clock with every function:
+
+| | Cost |
+|---|---|
+| **Skip:** microSD module + card (sounds are built in now) | −$26.84 |
+| **Use what you have:** a USB-C phone charger (5 V 3 A) instead of the power supply, an old linen shirt or pillowcase for the fabric, hot glue instead of spray adhesive, a coin cell from the drawer, the strip's own wires plus jumpers instead of the wire kit, no rubber feet | −$70 or so |
+| **Cheaper fabric** if you have none: [muslin, 1.3 yd](https://www.amazon.com/dp/B0G8HGNHWH) | $6.99 |
+| **Amazon, lean:** strip, [74AHCT125 10 pcs](https://www.amazon.com/dp/B08R6BCSYC), resistor, capacitor, [amp 2 pcs](https://www.amazon.com/dp/B0DPJRLMDJ), speaker, RTC, encoder, buttons, USB-C board, radar, jumpers, protoboards, inserts, screws | **$129.55** (+$7.49 for the auto-dim light sensor) |
+| **Plus** the Adafruit clock from adafruit.com | about $15 + shipping |
+
+Ordering single units from AliExpress instead brings the parts to roughly **$35–55** in total, at 1–3 weeks' shipping. That's a typical price range, not checked today. Each module there is about $0.50–3 rather than a $7–14 multipack.

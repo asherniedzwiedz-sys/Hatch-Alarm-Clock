@@ -3,6 +3,9 @@
 
 #include "Logic.h"
 #include "SleepLogic.h"
+#include "SoundSynth.h"
+
+#include <stdio.h>
 
 // 2026-10-19 is a Monday. Tests use UTC as "local" time.
 static const int64_t MON_0700 = (int64_t)daysFromCivil(2026, 10, 19) * DAY_SEC + 7 * 3600;
@@ -279,6 +282,31 @@ void test_sleep_ignores_naps_and_short_sessions() {
   TEST_ASSERT_EQUAL_INT(0, s.nights);  // too short to keep
 }
 
+void test_sound_synth() {
+  TEST_ASSERT_TRUE(synthByName("rain") == SynthSound::Rain);
+  TEST_ASSERT_TRUE(synthByName("rain.wav") == SynthSound::None);  // SD files stay files
+  for (int k = 1; k <= 5; k++) {
+    NoiseSynth n;
+    n.start((SynthSound)k);
+    double sum = 0, sq = 0;
+    long clipped = 0;
+    const long N = 44100L * 30;  // 30 s: several ocean waves
+    for (long i = 0; i < N; i++) {
+      const int v = n.next();
+      sum += v;
+      sq += (double)v * v;
+      clipped += v >= 32000 || v <= -32000;
+    }
+    const double rms = sqrt(sq / N) / 32767.0, mean = sum / N / 32767.0;
+    char msg[96];
+    snprintf(msg, sizeof msg, "%s: rms %.3f (%.1f dBFS) mean %.4f clipped %ld", SYNTH_NAMES[k - 1], rms, 20 * log10(rms), mean, clipped);
+    TEST_MESSAGE(msg);
+    TEST_ASSERT_TRUE_MESSAGE(rms > 0.08 && rms < 0.125, msg);  // -20 dBFS +-2 dB each, like the WAVs
+    TEST_ASSERT_TRUE_MESSAGE(fabs(mean) < 0.02, msg);         // no DC offset
+    TEST_ASSERT_TRUE_MESSAGE(clipped < N / 1000, msg);
+  }
+}
+
 int main() {
   UNITY_BEGIN();
   RUN_TEST(test_sunrise_curve);
@@ -295,5 +323,6 @@ int main() {
   RUN_TEST(test_ld2410_parser);
   RUN_TEST(test_sleep_night);
   RUN_TEST(test_sleep_ignores_naps_and_short_sessions);
+  RUN_TEST(test_sound_synth);
   return UNITY_END();
 }

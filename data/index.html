@@ -194,7 +194,7 @@ async function refresh() {
   $('status').textContent = [n ? `Next alarm ${pad(n.hour)}:${pad(n.minute)} in ${dur(s.next.in)}` : 'No alarm set',
     s.phase !== 'idle' ? `Alarm: ${s.phase}` : '', s.wifi.connected ? `Wi-Fi ${s.wifi.ssid} (${s.wifi.ip})` : s.wifi.ap ? 'Setup Wi-Fi active' : 'Wi-Fi offline',
     'fw ' + s.fw].filter(Boolean).join(' · ');
-  $('warn').textContent = [!s.rtc && 'RTC not responding', !s.timeValid && 'Set the clock below', !s.audio.sd && 'No SD card: sleep sounds unavailable',
+  $('warn').textContent = [!s.rtc && 'RTC not responding', !s.timeValid && 'Set the clock below',
     !s.auth && 'No admin password set'].filter(Boolean).join(' · ');
   $('ring').hidden = s.phase !== 'ringing' && s.phase !== 'snoozed' && s.phase !== 'sunrise';
   $('lon').checked = s.light.on;
@@ -211,7 +211,7 @@ async function refresh() {
   if (!loaded) {
     loaded = true;
     alarms = s.alarms; renderAlarms();
-    $('snd').replaceChildren(...s.audio.sounds.map(f => new Option(f.replace(/\.wav$/i, ''), f)));
+    $('snd').replaceChildren(...s.audio.sounds.map(f => new Option(f.endsWith('.wav') ? f : f[0].toUpperCase() + f.slice(1), f)));
     $('tz').value = st.tz; $('tzSel').value = TZ.some(t => t[1] === st.tz) ? st.tz : '';
     $('ssid').value = st.ssid;
   }
@@ -234,7 +234,7 @@ $('sleepTracking').onchange = e => post('/api/settings', {sleepTracking: e.targe
 $('sleepRangeCm').onchange = e => post('/api/settings', {sleepRangeCm: +e.target.value});
 $('clearSleep').onclick = () => confirm('Delete all recorded nights?') && post('/api/sleep', {clear: true}).then(loadSleep);
 $('soundVolume').onchange = e => post('/api/sound', {soundVolume: +e.target.value});
-$('play').onclick = () => $('snd').value ? post('/api/sound', {play: $('snd').value, timer: +$('timer').value, soundVolume: +$('soundVolume').value}) : msg('No sounds on the SD card');
+$('play').onclick = () => $('snd').value ? post('/api/sound', {play: $('snd').value, timer: +$('timer').value, soundVolume: +$('soundVolume').value}) : msg('Pick a sound first');
 $('stop').onclick = () => post('/api/sound', {stop: true});
 $('saveTz').onclick = () => post('/api/settings', {tz: $('tz').value.trim()});
 $('syncTime').onclick = () => post('/api/time', {epoch: Math.floor(Date.now() / 1000)});

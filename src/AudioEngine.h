@@ -1,8 +1,10 @@
 #pragma once
-// I2S output on its own FreeRTOS task: looped 16-bit/44.1 kHz WAVs from SD, or a synthesized chime
-// (so the alarm still sounds without a card). Public methods only queue commands; they never block.
+// I2S output on its own FreeRTOS task: built-in synthesized sleep sounds, optional looped
+// 16-bit/44.1 kHz WAVs from SD, and a synthesized alarm chime. No card needed for any of them. Public methods only queue commands; they never block.
 #include <Arduino.h>
 #include <FS.h>
+
+#include "SoundSynth.h"
 
 #include <atomic>
 #include <vector>
@@ -11,8 +13,8 @@ class AudioEngine {
  public:
   enum class Source : uint8_t { Off, Sound, Chime };
 
-  bool begin();                   // I2S + SD + task; returns whether the SD card mounted
-  bool play(const String& name);  // loop /sounds/<name>; false unless it is one of sounds()
+  bool begin();                   // I2S + task (+ SD if present); returns whether a card mounted
+  bool play(const String& name);  // built-in sound or /sounds/<name>; false unless it is one of sounds()
   void chime(uint32_t fadeInMs);
   void stop(uint32_t fadeMs);
   void setVolume(uint8_t v) { volume_ = v > 100 ? 100 : v; }
@@ -53,6 +55,7 @@ class AudioEngine {
   uint32_t dataStart_ = 0, dataLen_ = 0, pos_ = 0;
   uint8_t channels_ = 1;
   Source playing_ = Source::Off;
+  NoiseSynth synth_;  // kind None = playing a WAV
   float fade_ = 0, fadeStep_ = 0, fadeTarget_ = 0, volGain_ = 0;
   bool stopping_ = false;
   struct Voice {

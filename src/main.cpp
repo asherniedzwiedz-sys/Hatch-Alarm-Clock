@@ -126,7 +126,7 @@ void setup() {
   light.begin();
   input.begin();
   if (!sched.begin()) Serial.println("DS3231 not responding: alarms need the RTC or Wi-Fi time");
-  if (!audio.begin()) Serial.println("SD card not mounted: sleep sounds unavailable (chime still works)");
+  if (!audio.begin()) Serial.println("No SD card: built-in sleep sounds only");
   audio.setVolume(sched.settings.soundVolume);
 
   Wire.beginTransmission(BH1750_ADDR);

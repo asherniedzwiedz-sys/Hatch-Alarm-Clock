@@ -16,7 +16,7 @@ STATE = {
                  "autoDim": False, "alarmVolume": 60, "soundVolume": 40, "clockLevel": 4, "clock24": False, "sleepTracking": True, "sleepRangeCm": 200},
     "light": {"on": False, "lux": 12.5, "clock": True},
     "audio": {"source": "off", "current": "", "volume": 40, "timer": 0, "sd": True,
-              "sounds": ["fan.wav", "ocean.wav", "pink.wav", "rain.wav", "white.wav"]},
+              "sounds": ["white", "pink", "rain", "ocean", "fan", "my-rain.wav"]},
     "wifi": {"connected": False, "ap": True, "ssid": "", "ip": ""},
     "sleep": {"sensor": True, "present": True, "motion": 3, "distance": 140, "tracking": False},
 }

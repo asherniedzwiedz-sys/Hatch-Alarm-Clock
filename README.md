@@ -7,7 +7,8 @@ src/          firmware (PlatformIO, Arduino-ESP32 2.0.17)
   main.cpp            policy: alarm phase -> light + sound, buttons -> actions
   Logic.h             pure logic: sunrise curve, kelvinToRGB, alarm state machine, JSON validation
   LightEngine.*       WS2812B via NeoPixelBus (RMT), fades, current cap, 10 Hz
-  AudioEngine.*       I2S task: looped SD WAVs + synthesized chime
+  AudioEngine.*       I2S task: built-in sleep sounds, optional SD WAVs, chime
+  SoundSynth.h        pure logic: white/pink/rain/ocean/fan synthesized live
   AlarmScheduler.*    DS3231 RTC, NTP -> RTC, alarms/settings as JSON in NVS
   WebUI.*             Wi-Fi STA + setup AP, JSON API, OTA
   InputHandler.*      encoder ISR + debounced buttons
@@ -16,7 +17,7 @@ src/          firmware (PlatformIO, Arduino-ESP32 2.0.17)
   SleepMonitor.*      radar on UART2, last 7 nights in NVS
 data/index.html       the whole web UI (LittleFS)
 test/test_logic/      native unit tests for Logic.h and SleepLogic.h
-tools/gen_sounds.py   synthesizes the 5 seamless sleep loops
+tools/gen_sounds.py   optional: pre-rendered WAV loops for an SD card
 tools/mock_server.py  fake clock API for working on the web UI without hardware
 enclosure/            OpenSCAD model, STLs, build/check script, assembly guide
 ```
@@ -36,7 +37,7 @@ enclosure/            OpenSCAD model, STLs, build/check script, assembly guide
 | BH1750 (optional) | VCC / GND / SDA / SCL / ADDR | 3V3 / GND / GPIO21 / GPIO22 / GND (address 0x23) |
 | HT16K33 16×8 dot clock (Adafruit 0.8" FeatherWing, optional) | 3V / GND / SDA / SCL | 3V3 / GND / GPIO21 / GPIO22 (address 0x70) |
 | HLK-LD2410C radar (sleep tracking) | VCC / GND / TX / RX / OUT | 5 V / GND / **GPIO4** / **GPIO13** / not connected (3.3 V UART, 256000 baud) |
-| microSD (VSPI) | CS / SCK / MISO / MOSI | **GPIO5 / 18 / 19 / 23**; VCC 5 V if the module has a regulator, else 3V3 |
+| microSD (VSPI, optional) | CS / SCK / MISO / MOSI | **GPIO5 / 18 / 19 / 23**; VCC 5 V if the module has a regulator, else 3V3. Only for your own WAVs |
 | Rotary encoder | A(CLK) / B(DT) / SW / + / GND | **GPIO34 / GPIO35 / GPIO33** / 3V3 / GND |
 | Alarm button | one side / other | **GPIO27** / GND |
 | Light / snooze button | one side / other | **GPIO14** / GND |
@@ -63,7 +64,7 @@ The first command flashes the firmware; the second uploads the web UI to LittleF
 
 On Windows, keep the project in a short path, or set `PLATFORMIO_WORKSPACE_DIR` to a short folder such as `C:\pio-ws`. Library paths under `.pio` can exceed the 260-character limit, and the compiler then reports missing files.
 
-Sleep sounds: generate them, then copy `sd_card/sounds/*.wav` to `/sounds/` on a FAT32 card. Each file is 60 s, 16-bit, 44.1 kHz mono, about 5.3 MB. Any other 16-bit / 44.1 kHz PCM WAV in `/sounds` also shows up in the UI.
+Sleep sounds are built in: white, pink, rain, ocean and fan are synthesized live on the ESP32, so no SD card is needed. An SD card is optional, for your own sounds. To use pre-rendered loops instead, generate them and copy `sd_card/sounds/*.wav` to `/sounds/` on a FAT32 card. Each file is 60 s, 16-bit, 44.1 kHz mono, about 5.3 MB. Any other 16-bit / 44.1 kHz PCM WAV in `/sounds` also shows up in the UI.
 ```bash
 python tools/gen_sounds.py
 ```
