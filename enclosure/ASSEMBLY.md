@@ -70,10 +70,10 @@ Every part fits a 220 × 220 mm bed (largest footprint 184 × 140 mm).
 - **Sleep radar:** HLK-LD2410C (22 × 16 mm; the pocket is set by `radar_size`, so measure yours).
 - **Inserts:** 8 × M3 heat-set (Ø4.0 hole, 5 mm): 2 in the frame, 4 in the shell's back bosses, 2 in the light-box posts. Add 4 more for the devkit standoffs.
 - **Screws:**
-  - 2 × M3×10 countersunk (frame; no longer, or they push through the frame face)
-  - 2 × M3×6 countersunk (light box)
-  - 4 × M3×8 countersunk (back cover)
-  - 4 × M3×6 for the devkit board (holes 22 × 60 mm)
+  - 2 × M3×10 countersunk (frame). No longer, or they push through the frame face; M3×8 only reaches 2 mm into the insert.
+  - 2 × M3×6 or M3×8 countersunk (light box: 2.5 mm plate into a 6 mm insert hole; M3×10 bottoms out)
+  - 4 × M3×6 or M3×8 countersunk (back cover: 3 mm cover into a 6 mm insert hole; M3×10 bottoms out)
+  - 4 × M3×5 or M3×6, pan head, for the devkit board (holes 22 × 60 mm). A 1.6 mm board plus a 6 mm insert hole means M3×8 bottoms out.
 - **Controls:** EC11 encoder (nut on the M7 bushing) under the knob, and 2 × 12 mm panel-mount momentary buttons. All three holes are square to the curved top.
 - **Other:**
   - 4 rubber feet, Ø ≤ 11 mm
