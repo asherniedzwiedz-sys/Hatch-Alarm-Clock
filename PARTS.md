@@ -1,5 +1,7 @@
 # Parts list
 
+Also as a spreadsheet: [Sunrise_Clock_Parts.xlsx](Sunrise_Clock_Parts.xlsx). Pick Amazon or AliExpress per part, and the totals update.
+
 > **Cheaper build:** the sleep sounds are now synthesized on the ESP32, so the **microSD module and card are optional** (only for your own WAVs). See [Lean build](#lean-build) at the end.
 
 Picked on Amazon on 2026-10-20, with each listing's specs checked against this build. Prices change. Most items are multipacks, so you'll have spares. Not included: the ESP32 devkit and the white and black PLA, which you already have.
