@@ -12,11 +12,7 @@ constexpr int PIN_ENC_SW = 33, PIN_BTN_ALARM = 27, PIN_BTN_LIGHT = 14;  // to GN
 constexpr int PIN_RADAR_RX = 4, PIN_RADAR_TX = 13;  // HLK-LD2410C on UART2 (its TX -> GPIO4)
 
 // ---- Hardware calibration ----
-#ifdef WOKWI
-constexpr int LED_COUNT = 2;  // simulator: 48 bits fit one RMT memory block (no refill interrupts); 40 LEDs stayed dark there
-#else
 constexpr int LED_COUNT = 40;
-#endif
 constexpr float LED_MA_PER_CHANNEL = 20.0f;  // WS2812B current per colour channel at 255
 constexpr float LED_MAX_MA = 1800.0f;        // LED share of the 5 V 3 A supply; ESP32 + amp need the rest
 constexpr int ENC_STEPS_PER_DETENT = 4;      // quadrature edges per click (2 on some encoders)

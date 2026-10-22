@@ -1,9 +1,21 @@
 #include "LightEngine.h"
 
 void LightEngine::begin() {
+#ifndef WOKWI
   strip_.Begin();
-  strip_.ClearTo(RgbColor(0));
+#endif
+  show(0, 0, 0);
+}
+
+// shortcut: Wokwi shows nothing from NeoPixelBus's RMT output (its sample translator), so the simulator
+// build lights only the first LED with the core's neopixelWrite(), which sends pre-built RMT items.
+void LightEngine::show(uint8_t r, uint8_t g, uint8_t b) {
+#ifdef WOKWI
+  neopixelWrite(PIN_LED_DATA, r, g, b);
+#else
+  strip_.ClearTo(RgbColor(r, g, b));
   strip_.Show();
+#endif
 }
 
 void LightEngine::setNight(bool on, uint8_t pct, uint16_t kelvin, uint32_t fadeMs) {
@@ -75,9 +87,9 @@ void LightEngine::update() {
     g *= s;
     b *= s;
   }
-  const RgbColor c((uint8_t)(r + 0.5f), (uint8_t)(g + 0.5f), (uint8_t)(b + 0.5f));
+  const uint8_t r8 = (uint8_t)(r + 0.5f), g8 = (uint8_t)(g + 0.5f), b8 = (uint8_t)(b + 0.5f);
+  const uint32_t c = (uint32_t)r8 << 16 | (uint32_t)g8 << 8 | b8;
   if (c == shown_) return;
-  strip_.ClearTo(c);
-  strip_.Show();
+  show(r8, g8, b8);
   shown_ = c;
 }
