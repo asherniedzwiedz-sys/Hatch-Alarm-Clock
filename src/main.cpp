@@ -41,7 +41,10 @@ static float sunriseMax() { return sched.settings.sunriseMax / 100.0f; }
 
 static void onPhase(Phase from, Phase to) {
   static const char* const kName[] = {"idle", "sunrise", "ringing", "snoozed"};
-  Serial.printf("Alarm: %s\n", kName[(int)to]);
+  const time_t t = time(nullptr);
+  tm lt;
+  localtime_r(&t, &lt);
+  Serial.printf("%02d:%02d:%02d Alarm: %s\n", lt.tm_hour, lt.tm_min, lt.tm_sec, kName[(int)to]);
   const Settings& s = sched.settings;
   switch (to) {
     case Phase::Sunrise:
@@ -67,6 +70,8 @@ static void onPhase(Phase from, Phase to) {
 }
 
 static void handleInput(const InputEvents& e) {
+  if (e.alarmPress || e.lightPress || e.encPress)
+    Serial.printf("Button:%s%s%s\n", e.alarmPress ? " alarm" : "", e.lightPress ? " light" : "", e.encPress ? " knob" : "");
   Settings& s = sched.settings;
   const Phase ph = sched.phase();
   if (ph == Phase::Ringing || ph == Phase::Snoozed) {  // any button ends or pauses the alarm
@@ -129,6 +134,8 @@ void setup() {
   Wire.begin(PIN_SDA, PIN_SCL, 400000);
   light.begin();
   input.begin();
+  Serial.printf("Buttons at boot (1 = released): alarm %d, light %d, knob %d\n", digitalRead(PIN_BTN_ALARM),
+                digitalRead(PIN_BTN_LIGHT), digitalRead(PIN_ENC_SW));
   if (!sched.begin()) Serial.println("DS3231 not responding: alarms need the RTC or Wi-Fi time");
 #ifdef WOKWI
   if (!sched.count && sched.timeValid()) {  // simulator: a one-time alarm 3 min out, so sunrise starts now and rings soon
