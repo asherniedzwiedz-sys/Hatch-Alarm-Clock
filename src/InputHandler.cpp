@@ -19,7 +19,10 @@ static void IRAM_ATTR encoderIsr() {
 void InputHandler::begin() {
   pinMode(PIN_ENC_A, INPUT);
   pinMode(PIN_ENC_B, INPUT);
-  for (Button* b : {&enc_, &alarm_, &light_}) pinMode(b->pin, INPUT_PULLUP);
+  for (Button* b : {&enc_, &alarm_, &light_}) {
+    pinMode(b->pin, INPUT_PULLUP);
+    b->raw = b->stable = digitalRead(b->pin);  // held at power-up is not a press: a stuck button would dismiss every resumed alarm
+  }
   s_state = (uint8_t)(digitalRead(PIN_ENC_A) << 1 | digitalRead(PIN_ENC_B));
   attachInterrupt(digitalPinToInterrupt(PIN_ENC_A), encoderIsr, CHANGE);
   attachInterrupt(digitalPinToInterrupt(PIN_ENC_B), encoderIsr, CHANGE);
