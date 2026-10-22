@@ -40,6 +40,8 @@ static int stepPct(int v, int detents, int lo) {
 static float sunriseMax() { return sched.settings.sunriseMax / 100.0f; }
 
 static void onPhase(Phase from, Phase to) {
+  static const char* const kName[] = {"idle", "sunrise", "ringing", "snoozed"};
+  Serial.printf("Alarm: %s\n", kName[(int)to]);
   const Settings& s = sched.settings;
   switch (to) {
     case Phase::Sunrise:
