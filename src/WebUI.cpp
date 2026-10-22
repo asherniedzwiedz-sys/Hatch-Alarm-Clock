@@ -28,7 +28,9 @@ void WebUI::begin(AlarmScheduler& sched, LightEngine& light, AudioEngine& audio,
   if (s.ssid[0]) WiFi.begin(s.ssid, s.pass);
   else startAp();  // first boot: nothing to join
   lastSta_ = millis();
+#ifndef WOKWI  // the simulator's RTC starts at the PC's local time; real UTC from SNTP would shift the test alarm by hours
   configTzTime(s.tz, "pool.ntp.org", "time.google.com");  // SNTP runs whenever the STA link is up
+#endif
   if (MDNS.begin(HOSTNAME)) MDNS.addService("http", "tcp", 80);
   if (!LittleFS.begin(false)) log_e("LittleFS missing: run `pio run -t uploadfs`");
 
